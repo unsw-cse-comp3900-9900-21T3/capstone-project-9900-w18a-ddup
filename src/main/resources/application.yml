@@ -1,0 +1,13 @@
+springdoc:
+  api-docs:
+    path: /api-docs
+spring:
+  profiles:
+    active:
+      dev
+server:
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        secure: true

@@ -1,0 +1,4 @@
+e-comm:
+  jwt:
+    token-validity: 3d
+    token-validity-for-remember-me: 30d

@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: "jdbc:postgresql://127.0.0.1:5432/e-comm"
+    username: e-comm
+    password: SIMPLE_PASSWORD
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+logging:
+  level:
+    sql: debug
+    web: debug
+e-comm:
+  jwt:
+    token-validity: 3d
+    token-validity-for-remember-me: 30d
