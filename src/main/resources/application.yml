@@ -5,6 +5,14 @@ spring:
   profiles:
     active:
       dev
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate.jdbc.time_zone: UTC
+      hibernate.globally_quoted_identifiers: true
+#      hibernate.cache.use_second_level_cache: true
+#      hibernate.cache.region.factory_class: org.redisson.hibernate.RedissonRegionFactory
+#      hibernate.cache.use_query_cache: false
 server:
   servlet:
     session:

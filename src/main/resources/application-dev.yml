@@ -7,6 +7,14 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  redis:
+    database: 0
+    client-type: lettuce
+    password: ecommpasswd
+    host: 127.0.0.1
+    port: 6379
+  cache:
+    type: redis
 logging:
   level:
     sql: debug

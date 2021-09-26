@@ -12,13 +12,9 @@ import java.util.Collection;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Privilege extends BaseEntity {
+public class Tag extends BaseEntity {
     private String name;
-
-    @ManyToMany(mappedBy = "privileges")
-    private Collection<Role> roles;
-
-    public Privilege(String name) {
-        this.name = name;
-    }
+    private Integer priorityOrder;
+    @ManyToMany(mappedBy = "tags")
+    private Collection<Product> products;
 }
