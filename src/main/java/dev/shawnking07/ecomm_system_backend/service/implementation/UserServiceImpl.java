@@ -51,15 +51,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void editUser(Long id, @NotNull UserVM userVM) {
         User user = modelMapper.map(userVM, User.class);
-        Long newId = null;
         if (id == null && SecurityUtils.getCurrentUserLogin().isPresent()) {
             String username = SecurityUtils.getCurrentUserLogin().get();
             Optional<User> byEmailIgnoreCase = userRepository.findByEmailIgnoreCase(username);
             if (byEmailIgnoreCase.isPresent()) {
-                newId = byEmailIgnoreCase.get().getId();
+                id = byEmailIgnoreCase.get().getId();
             }
         }
-        user.setId(newId);
+        user.setId(id);
         userRepository.save(user);
     }
 }
