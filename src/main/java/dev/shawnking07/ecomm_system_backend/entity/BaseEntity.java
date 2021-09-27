@@ -7,19 +7,20 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.time.Instant;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public abstract class BaseEntity extends AbstractPersistable<Long> {
+public abstract class BaseEntity {
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     @CreatedBy
     @Column(name = "created_by", nullable = false, length = 50, updatable = false)

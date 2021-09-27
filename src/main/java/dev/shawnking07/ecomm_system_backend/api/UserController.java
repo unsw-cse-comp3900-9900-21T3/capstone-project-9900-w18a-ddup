@@ -2,34 +2,37 @@ package dev.shawnking07.ecomm_system_backend.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.shawnking07.ecomm_system_backend.dto.LoginVM;
+import dev.shawnking07.ecomm_system_backend.dto.RegisterVM;
+import dev.shawnking07.ecomm_system_backend.dto.UserVM;
 import dev.shawnking07.ecomm_system_backend.security.jwt.JWTFilter;
 import dev.shawnking07.ecomm_system_backend.security.jwt.TokenProvider;
-import lombok.extern.slf4j.Slf4j;
+import dev.shawnking07.ecomm_system_backend.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
-@Slf4j
 @RequestMapping("/user")
 public class UserController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
+    private final UserService userService;
 
-    public UserController(AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider) {
+    public UserController(AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider, UserService userService) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.tokenProvider = tokenProvider;
+        this.userService = userService;
     }
 
+    @PreAuthorize("permitAll()")
     @PostMapping("/login")
     public ResponseEntity<JWTToken> login(@Valid @RequestBody LoginVM loginVM) {
         var token = new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
@@ -60,6 +63,28 @@ public class UserController {
         void setIdToken(String idToken) {
             this.idToken = idToken;
         }
+    }
+
+    @PreAuthorize("permitAll()")
+    @PostMapping("/")
+    public void register(@Valid @RequestBody RegisterVM registerVM) {
+        userService.register(registerVM);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or " +
+            "#userVM.email == T(dev.shawnking07.ecomm_system_backend.security.SecurityUtils).currentUserLogin.orElse('')")
+    @SecurityRequirement(name = "bearerAuth")
+    @PutMapping("/{id}")
+    public void edit(@Valid @RequestBody UserVM userVM, @PathVariable Long id) {
+        userService.editUser(id, userVM);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or " +
+            "#userVM.email == T(dev.shawnking07.ecomm_system_backend.security.SecurityUtils).currentUserLogin.orElse('')")
+    @SecurityRequirement(name = "bearerAuth")
+    @PutMapping("/")
+    public void edit(@Valid @RequestBody UserVM userVM) {
+        userService.editUser(null, userVM);
     }
 
 }

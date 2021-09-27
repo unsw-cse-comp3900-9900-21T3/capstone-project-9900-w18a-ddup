@@ -6,9 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 
 @Entity
+@Table(indexes = {
+        @Index(columnList = "email", unique = true)
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,8 +24,11 @@ public class User extends BaseEntity {
     @JsonIgnore
     private String password;
     private boolean enabled = Boolean.TRUE;
+    private String address;
+    @Size(max = 20)
+    private String postcode;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(

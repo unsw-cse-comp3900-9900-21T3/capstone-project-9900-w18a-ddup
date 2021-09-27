@@ -4,7 +4,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+  redis:
+    port: 6300
 e-comm:
   jwt:
     token-validity: 1d
     token-validity-for-remember-me: 3d
+init: true

@@ -1,15 +1,18 @@
 package dev.shawnking07.ecomm_system_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
+import org.springframework.http.MediaType;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -22,7 +25,15 @@ public class Product extends BaseEntity {
     private BigDecimal price;
     @Min(0)
     private BigDecimal discountPrice;
-    private String picturePath;
+    private String filename;
+
+    private String fileType;
+
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @Type(type = "org.hibernate.type.BinaryType")
+    private byte[] picture;
     @Min(0)
     private Long amount;
 
@@ -34,4 +45,21 @@ public class Product extends BaseEntity {
             inverseJoinColumns = @JoinColumn(
                     name = "tag_id", referencedColumnName = "id"))
     private Set<Tag> tags;
+
+
+    public byte[] getPicture() {
+        return Arrays.copyOf(picture, picture.length);
+    }
+
+    public void setPicture(byte[] picture) {
+        this.picture = Arrays.copyOf(picture, picture.length);
+    }
+
+    public List<MediaType> getFileType() {
+        return MediaType.parseMediaTypes(fileType);
+    }
+
+    public void setFileType(Collection<MediaType> mediaTypes) {
+        this.fileType = MediaType.toString(mediaTypes);
+    }
 }

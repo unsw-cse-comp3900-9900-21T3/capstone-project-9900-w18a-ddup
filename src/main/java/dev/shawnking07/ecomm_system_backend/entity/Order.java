@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
@@ -22,7 +19,7 @@ public class Order extends BaseEntity {
     @OneToOne
     private User payer;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<OrderProducts> products;
 
     @Embeddable
