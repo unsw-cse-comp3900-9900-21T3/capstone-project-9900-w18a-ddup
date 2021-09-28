@@ -27,7 +27,7 @@ public class Product extends BaseEntity {
     private BigDecimal discountPrice;
     private String filename;
 
-    private String fileType;
+    private String filetype;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
@@ -55,11 +55,11 @@ public class Product extends BaseEntity {
         this.picture = Arrays.copyOf(picture, picture.length);
     }
 
-    public List<MediaType> getFileType() {
-        return MediaType.parseMediaTypes(fileType);
+    public List<MediaType> getFiletype() {
+        return MediaType.parseMediaTypes(filetype);
     }
 
-    public void setFileType(Collection<MediaType> mediaTypes) {
-        this.fileType = MediaType.toString(mediaTypes);
+    public void setFiletype(Collection<MediaType> mediaTypes) {
+        this.filetype = MediaType.toString(mediaTypes);
     }
 }

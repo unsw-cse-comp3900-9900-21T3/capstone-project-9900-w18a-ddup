@@ -7,6 +7,7 @@ import dev.shawnking07.ecomm_system_backend.dto.UserVM;
 import dev.shawnking07.ecomm_system_backend.security.jwt.JWTFilter;
 import dev.shawnking07.ecomm_system_backend.security.jwt.TokenProvider;
 import dev.shawnking07.ecomm_system_backend.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,8 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Login system and return jwt token string",
+            description = "this may be the only api does not satisfy RESTful")
     @PreAuthorize("permitAll()")
     @PostMapping("/login")
     public ResponseEntity<JWTToken> login(@Valid @RequestBody LoginVM loginVM) {
@@ -65,23 +68,28 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "User registration", description = "You can access this api without any authorization")
     @PreAuthorize("permitAll()")
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/")
     public void register(@Valid @RequestBody RegisterVM registerVM) {
         userService.register(registerVM);
     }
 
+    @Operation(summary = "Edit user info for admin", description = "You should access this api with admin role")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ROLE_ADMIN') or " +
             "#userVM.email == T(dev.shawnking07.ecomm_system_backend.security.SecurityUtils).currentUserLogin.orElse('')")
-    @SecurityRequirement(name = "bearerAuth")
+    @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/{id}")
     public void edit(@Valid @RequestBody UserVM userVM, @PathVariable Long id) {
         userService.editUser(id, userVM);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or " +
-            "#userVM.email == T(dev.shawnking07.ecomm_system_backend.security.SecurityUtils).currentUserLogin.orElse('')")
+    @Operation(summary = "Edit user info for himself", description = "You should access this api with jwt token")
+    @PreAuthorize("#userVM.email == T(dev.shawnking07.ecomm_system_backend.security.SecurityUtils).currentUserLogin.orElse('')")
     @SecurityRequirement(name = "bearerAuth")
+    @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/")
     public void edit(@Valid @RequestBody UserVM userVM) {
         userService.editUser(null, userVM);

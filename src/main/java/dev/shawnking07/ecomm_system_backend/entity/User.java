@@ -17,8 +17,8 @@ import java.util.Collection;
 @Setter
 @NoArgsConstructor
 public class User extends BaseEntity {
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
     @Column(unique = true)
     private String email;
     @JsonIgnore

@@ -13,8 +13,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class UserVM {
     @NotNull
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
     @NotNull
     private String email;
     @NotNull

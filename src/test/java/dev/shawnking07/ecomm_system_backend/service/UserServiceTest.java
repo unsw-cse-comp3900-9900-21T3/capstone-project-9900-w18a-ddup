@@ -49,8 +49,8 @@ class UserServiceTest {
 
         userId = user.getId();
 
-        assertEquals("John", user.getFirstName());
-        assertEquals("Doe", user.getLastName());
+        assertEquals("John", user.getFirstname());
+        assertEquals("Doe", user.getLastname());
         assertEquals(email, user.getEmail());
         assertTrue(user.isEnabled());
         assertTrue(passwordEncoder.matches("12345678", user.getPassword()));
@@ -62,8 +62,8 @@ class UserServiceTest {
     void editMyself() {
         String address = "new address test";
         UserVM userVM = UserVM.builder()
-                .firstName("John")
-                .lastName("Doe")
+                .firstname("John")
+                .lastname("Doe")
                 .email("john.d@test.com")
                 .password(passwordEncoder.encode("11223344"))
                 .address(address)
@@ -82,8 +82,8 @@ class UserServiceTest {
     void adminEditUser() {
         String address = "new address test";
         UserVM userVM = UserVM.builder()
-                .firstName("John")
-                .lastName("Doe")
+                .firstname("John")
+                .lastname("Doe")
                 .email("john.d@test.com")
                 .password(passwordEncoder.encode("11223344"))
                 .address(address)

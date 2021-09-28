@@ -1,4 +1,4 @@
-package dev.shawnking07.ecomm_system_backend.security;
+package dev.shawnking07.ecomm_system_backend.config;
 
 import dev.shawnking07.ecomm_system_backend.entity.Privilege;
 import dev.shawnking07.ecomm_system_backend.entity.Role;
@@ -53,8 +53,8 @@ public class SetupDataLoader implements
 
         Role adminRole = roleRepository.findByName("ROLE_ADMIN");
         User user = new User();
-        user.setFirstName("John");
-        user.setLastName("Doe");
+        user.setFirstname("John");
+        user.setLastname("Doe");
         user.setPassword(passwordEncoder.encode("admin"));
         user.setEmail("admin@test.com");
         user.setRoles(List.of(adminRole));
