@@ -1,0 +1,11 @@
+week 1
+As a scrum master, I created the jira account and project for our team, I also help discuss the topic and distribute the user story draft tasks to members.
+
+week 2
+We decide the meeting time. As a scrum master, I hold the meeting with other guys to decide our final novel functions and lead them to decide the final user stories, we discuss the
+the main pages of our system and decide the rough front-end as well as back-end architecture. Then I help to distribute the task in terms of proposal report and decide the deadline
+for our group.
+
+week 3
+I created the shared document for our group to write the proposal. Besides, I keep doing my distributed proposal part of sprints. I plan to finish the background part in 2 days.
+ 
