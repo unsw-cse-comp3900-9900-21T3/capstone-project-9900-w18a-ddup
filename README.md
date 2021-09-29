@@ -11,11 +11,11 @@
 - Spring Cache
 - Spring Data JPA
 - PostgreSQL Driver
-- jackson
-- lettuce
+- Jackson (Serialization and Deserialization)
+- Lettuce (Redis connection driver)
 - OpenAPI (generate OpenAPI Doc)
 - problem-spring-web (beautify http error output)
-- ModelMapper
+- ModelMapper (Convert between DTO and entity)
 - Embedded H2 Database (test)
 - Embedded Redis (test)
 - jib (compile docker image)
