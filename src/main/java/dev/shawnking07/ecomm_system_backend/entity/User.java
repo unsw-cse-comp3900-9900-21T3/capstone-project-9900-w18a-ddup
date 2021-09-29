@@ -19,7 +19,7 @@ import java.util.Collection;
 public class User extends BaseEntity {
     private String firstname;
     private String lastname;
-    @Column(unique = true)
+    @Column(unique = true, length = 50)
     private String email;
     @JsonIgnore
     private String password;
