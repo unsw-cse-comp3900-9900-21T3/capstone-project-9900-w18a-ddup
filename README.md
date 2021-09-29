@@ -59,3 +59,4 @@ G --> H[host OpenAPI doc && backend]
 - `User.email` is mapped to `username`
 - Test DB is totally new, which means you need to add date first then do your test process.
 - Test DB will be truncated after program terminate.
+- Test DB and Redis may be switched to docker containers.
