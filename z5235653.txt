@@ -1,0 +1,8 @@
+Week 1
+Group formed. Together with all the other members, we wrote our first version user story.
+
+Week 2
+We discussed about the user story, and split work into parts.
+
+Week 3
+I draw the ER diagram, system architecture diagram and initiated the backend code. Working on the technical part of the proposal.
