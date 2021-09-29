@@ -1,6 +1,7 @@
 name: 'Compile Mermaid in Markdown'
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - '**/*.md'
