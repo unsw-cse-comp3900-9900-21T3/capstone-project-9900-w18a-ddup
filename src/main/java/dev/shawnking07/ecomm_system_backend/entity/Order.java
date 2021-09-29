@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Set;
 
@@ -21,6 +22,10 @@ public class Order extends BaseEntity {
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<OrderProducts> products;
+
+    private BigDecimal totalPrice;
+    private String shippingAddress;
+
 
     @Embeddable
     @Setter
