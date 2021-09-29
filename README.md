@@ -57,3 +57,5 @@ G --> H[host OpenAPI doc && backend]
 - Use `ModelMapper` for converting `DTO` and `Entity`. Make sure the names of properties are exactly same.
 - Cache has not been tested!! [TODO]
 - `User.email` is mapped to `username`
+- Test DB is totally new, which means you need to add date first then do your test process.
+- Test DB will be truncated after program terminate.
