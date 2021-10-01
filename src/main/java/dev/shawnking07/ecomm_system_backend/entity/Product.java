@@ -32,7 +32,8 @@ public class Product extends BaseEntity {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @JsonIgnore
-    @Type(type = "org.hibernate.type.BinaryType")
+    @Column(length = 20971520)
+    @Type(type = "org.hibernate.type.RowVersionType")
     private byte[] picture;
     @Min(0)
     private Long amount;

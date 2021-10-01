@@ -7,7 +7,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(indexes = {
@@ -35,6 +38,12 @@ public class User extends BaseEntity {
                     name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
+    private Set<Role> roles = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "buyer")
+    private List<Order> purchases = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "payer")
+    private List<Order> paidOrders = new ArrayList<>();
 
 }

@@ -4,6 +4,7 @@ import dev.shawnking07.ecomm_system_backend.dto.RegisterVM;
 import dev.shawnking07.ecomm_system_backend.dto.UserVM;
 import dev.shawnking07.ecomm_system_backend.entity.User;
 import dev.shawnking07.ecomm_system_backend.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Slf4j
 @SpringBootTest
 @ActiveProfiles("test")
-@Transactional
 class UserServiceTest {
     @Autowired
     private UserService userService;
@@ -42,6 +43,8 @@ class UserServiceTest {
                 .userType(RegisterVM.UserType.USER)
                 .build();
         userService.register(john);
+
+        log.info("[Register] user [{}] created!", email);
 
         Optional<User> byEmailIgnoreCase = userRepository.findByEmailIgnoreCase(email);
         assertTrue(byEmailIgnoreCase.isPresent());

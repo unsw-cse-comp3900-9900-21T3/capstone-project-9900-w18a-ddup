@@ -6,8 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Objects;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -15,38 +15,38 @@ import java.util.Set;
 @NoArgsConstructor
 public class Order extends BaseEntity {
     private String comments;
-    @OneToOne
+    @ManyToOne
     private User buyer;
-    @OneToOne
+    @ManyToOne
     private User payer;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<OrderProducts> products;
+    @ElementCollection
+    private List<OrderProducts> products = new ArrayList<>();
 
     private BigDecimal totalPrice;
     private String shippingAddress;
 
 
     @Embeddable
-    @Setter
-    @Getter
-    @NoArgsConstructor
-    static class OrderProducts {
+    public static class OrderProducts {
         @OneToOne
-        private Product product;
-        private Long amount = 1L;
+        protected Product product;
+        protected Long amount = 1L;
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            OrderProducts that = (OrderProducts) o;
-            return product.equals(that.product);
+        public Product getProduct() {
+            return product;
         }
 
-        @Override
-        public int hashCode() {
-            return Objects.hash(product);
+        public void setProduct(Product product) {
+            this.product = product;
+        }
+
+        public Long getAmount() {
+            return amount;
+        }
+
+        public void setAmount(Long amount) {
+            this.amount = amount;
         }
     }
 

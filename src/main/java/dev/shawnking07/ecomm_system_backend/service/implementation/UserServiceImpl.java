@@ -12,8 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -37,13 +37,13 @@ public class UserServiceImpl implements UserService {
     public void register(RegisterVM registerVM) {
         User user = modelMapper.map(registerVM, User.class);
         if (duplicateUser(user.getEmail())) {
-            throw new RuntimeException("Duplicate user");
+            throw new RuntimeException("Duplicate user: " + registerVM.getEmail());
         }
         user.setPassword(passwordEncoder.encode(registerVM.getPassword()));
         if (registerVM.getUserType() == RegisterVM.UserType.ADMIN) {
-            user.setRoles(List.of(roleRepository.findByName("ROLE_ADMIN")));
+            user.setRoles(Set.of(roleRepository.findByName("ROLE_ADMIN")));
         } else {
-            user.setRoles(List.of(roleRepository.findByName("ROLE_USER")));
+            user.setRoles(Set.of(roleRepository.findByName("ROLE_USER")));
         }
         userRepository.save(user);
     }

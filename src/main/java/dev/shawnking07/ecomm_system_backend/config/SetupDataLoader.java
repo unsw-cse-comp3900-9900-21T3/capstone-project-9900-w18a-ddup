@@ -15,7 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
+/**
+ * This DataLoader can only be used in single node system.
+ * If you need to deploy for multiple severs, use initialize data with SQL scripts instead.
+ */
 @Component
 public class SetupDataLoader implements
         ApplicationListener<ContextRefreshedEvent> {
@@ -57,7 +62,7 @@ public class SetupDataLoader implements
         user.setLastname("Doe");
         user.setPassword(passwordEncoder.encode("admin"));
         user.setEmail("admin@test.com");
-        user.setRoles(List.of(adminRole));
+        user.setRoles(Set.of(adminRole));
         user.setEnabled(true);
         userRepository.save(user);
 
