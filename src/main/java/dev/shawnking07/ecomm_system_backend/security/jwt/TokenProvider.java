@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -27,28 +29,28 @@ public class TokenProvider {
 
     private final JwtParser jwtParser;
 
-    private final long tokenValidityInMilliseconds;
+    private final Duration tokenValidityInMilliseconds;
 
-    private final long tokenValidityInMillisecondsForRememberMe;
+    private final Duration tokenValidityInMillisecondsForRememberMe;
 
     public TokenProvider(ApplicationProperties applicationProperties) {
 //        String secret = applicationProperties.getJwt().getSecret();
 //        key = Keys.hmacShaKeyFor(Base64.getEncoder().encode(secret.getBytes(StandardCharsets.UTF_8)));
         key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
         jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
-        this.tokenValidityInMilliseconds = applicationProperties.getJwt().getTokenValidity().toMillis();
-        this.tokenValidityInMillisecondsForRememberMe = applicationProperties.getJwt().getTokenValidityForRememberMe().toMillis();
+        this.tokenValidityInMilliseconds = applicationProperties.getJwt().getTokenValidity();
+        this.tokenValidityInMillisecondsForRememberMe = applicationProperties.getJwt().getTokenValidityForRememberMe();
     }
 
     public String createToken(Authentication authentication, boolean rememberMe) {
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
 
-        long now = (new Date()).getTime();
+        Instant now = Instant.now();
         Date validity;
         if (rememberMe) {
-            validity = new Date(now + this.tokenValidityInMillisecondsForRememberMe);
+            validity = Date.from(now.plus(this.tokenValidityInMillisecondsForRememberMe));
         } else {
-            validity = new Date(now + this.tokenValidityInMilliseconds);
+            validity = Date.from(now.plus(this.tokenValidityInMilliseconds));
         }
 
         return Jwts
