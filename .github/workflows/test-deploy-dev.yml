@@ -46,11 +46,11 @@ jobs:
       - name: docker compose up
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
+          host: ${{ secrets.DEPLOY_SERVER }}
           key: ${{ secrets.DEPLOY_KEY }}
           username: ${{ secrets.DEPLOY_USER }}
           script: |
             cd github-action-deploy
-            docker load --input jib-image.tar
-            cd prod
+            docker load --input build/jib-image.tar
+            cd docker/prod
             docker-compose up -d
