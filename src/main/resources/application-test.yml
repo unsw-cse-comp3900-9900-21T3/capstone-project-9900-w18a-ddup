@@ -10,4 +10,3 @@ e-comm:
   jwt:
     token-validity: 1d
     token-validity-for-remember-me: 3d
-init: true

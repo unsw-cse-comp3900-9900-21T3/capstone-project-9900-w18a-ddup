@@ -6,6 +6,7 @@ import dev.shawnking07.ecomm_system_backend.entity.User;
 import dev.shawnking07.ecomm_system_backend.repository.PrivilegeRepository;
 import dev.shawnking07.ecomm_system_backend.repository.RoleRepository;
 import dev.shawnking07.ecomm_system_backend.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.Environment;
@@ -15,12 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
  * This DataLoader can only be used in single node system.
  * If you need to deploy for multiple severs, use initialize data with SQL scripts instead.
  */
+@Slf4j
 @Component
 public class SetupDataLoader implements
         ApplicationListener<ContextRefreshedEvent> {
@@ -36,7 +39,7 @@ public class SetupDataLoader implements
         this.roleRepository = roleRepository;
         this.privilegeRepository = privilegeRepository;
         this.passwordEncoder = passwordEncoder;
-        this.alreadySetup = !env.getProperty("init", Boolean.class, false);
+        this.alreadySetup = false;
     }
 
 
@@ -53,19 +56,24 @@ public class SetupDataLoader implements
 
         List<Privilege> generalPrivilege = List.of(
                 readPrivilege, writePrivilege);
-        createRoleIfNotFound("ROLE_ADMIN", generalPrivilege);
-        createRoleIfNotFound("ROLE_USER", generalPrivilege);
+        Role role_admin = createRoleIfNotFound("ROLE_ADMIN", generalPrivilege);
+        Role role_user = createRoleIfNotFound("ROLE_USER", generalPrivilege);
 
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN");
+        String email = "admin@test.com";
+        Optional<User> byEmailIgnoreCase = userRepository.findByEmailIgnoreCase(email);
+        if (byEmailIgnoreCase.isPresent()) {
+            log.info("[Init Data] (admin@test.com:admin) already exists!");
+            return;
+        }
         User user = new User();
         user.setFirstname("John");
         user.setLastname("Doe");
         user.setPassword(passwordEncoder.encode("admin"));
         user.setEmail("admin@test.com");
-        user.setRoles(Set.of(adminRole));
+        user.setRoles(Set.of(role_admin, role_user));
         user.setEnabled(true);
         userRepository.save(user);
-
+        log.info("[Init Data] (admin@test.com:admin) created!");
         alreadySetup = true;
     }
 

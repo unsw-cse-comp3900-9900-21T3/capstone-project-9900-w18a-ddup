@@ -22,8 +22,7 @@ public class UserController {
 
     @Operation(summary = "Edit user info for admin", description = "You should access this api with admin role")
     @SecurityRequirement(name = "bearerAuth")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or " +
-            "#userVM.email == T(dev.shawnking07.ecomm_system_backend.security.SecurityUtils).currentUserLogin.orElse('')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/{id}")
     public void edit(@PathVariable Long id, @Valid @RequestBody UserVM userVM) {
@@ -31,7 +30,7 @@ public class UserController {
     }
 
     @Operation(summary = "Edit user info for himself", description = "You should access this api with jwt token")
-    @PreAuthorize("#userVM.email == T(dev.shawnking07.ecomm_system_backend.security.SecurityUtils).currentUserLogin.orElse('')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @SecurityRequirement(name = "bearerAuth")
     @ResponseStatus(HttpStatus.CREATED)
     @PutMapping()

@@ -1,3 +1,16 @@
+spring:
+  datasource:
+    url: "jdbc:postgresql://db:5432/e-comm"
+    username: e-comm
+    password: SIMPLE_PASSWORD
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  redis:
+    client-type: lettuce
+    url: "redis://:ecommpasswd@redis:6379"
+
 e-comm:
   jwt:
     token-validity: 3d

@@ -13,8 +13,6 @@ spring:
     password: ecommpasswd
     host: 127.0.0.1
     port: 6379
-  cache:
-    type: redis
 logging:
   level:
     sql: debug
