@@ -4,6 +4,8 @@
 
 ---
 
+[![Run Gradle Test and Deploy to Server](https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-w18a-ddup/actions/workflows/test-deploy-dev.yml/badge.svg?branch=backend)](https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-w18a-ddup/actions/workflows/test-deploy-dev.yml)
+
 ## Imported Packages
 
 - Spring Boot
