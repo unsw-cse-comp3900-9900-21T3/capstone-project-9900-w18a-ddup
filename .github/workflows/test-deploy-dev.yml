@@ -31,22 +31,24 @@ jobs:
       - name: Run unit test
         run: ./gradlew test
 
-      - name: Build Docker Image tar
+      - name: Build docker image tar
         run: ./gradlew jibBuildTar
 
-      - name: copy docker build tar to host
+      - name: Copy docker build tar to host
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.DEPLOY_SERVER }}
           key: ${{ secrets.DEPLOY_KEY }}
+          username: ${{ secrets.DEPLOY_USER }}
           source: "build/jib-image.tar,docker/prod"
           target: "github-action-deploy"
 
-      - name: docker
+      - name: docker compose up
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           key: ${{ secrets.DEPLOY_KEY }}
+          username: ${{ secrets.DEPLOY_USER }}
           script: |
             cd github-action-deploy
             docker load --input jib-image.tar
