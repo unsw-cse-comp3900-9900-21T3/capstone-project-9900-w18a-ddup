@@ -14,12 +14,6 @@ spring:
 #      hibernate.cache.use_second_level_cache: true
 #      hibernate.cache.region.factory_class: org.redisson.hibernate.RedissonRegionFactory
 #      hibernate.cache.use_query_cache: false
-server:
-  servlet:
-    session:
-      cookie:
-        http-only: true
-        secure: true
 e-comm:
   jwt:
     secret: comp9900-e-commerce-system-spring-backend-jwt-secret-8h97g09dWnv6f143BD

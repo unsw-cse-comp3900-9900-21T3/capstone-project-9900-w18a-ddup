@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 import org.springframework.http.MediaType;
 
@@ -19,6 +20,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString(callSuper = true)
 public class Product extends BaseEntity {
     private String name;
     @Min(0)
@@ -34,6 +36,7 @@ public class Product extends BaseEntity {
     @JsonIgnore
     @Column(length = 20971520)
     @Type(type = "org.hibernate.type.RowVersionType")
+    @ToString.Exclude
     private byte[] picture;
     @Min(0)
     private Long amount;
@@ -45,6 +48,7 @@ public class Product extends BaseEntity {
                     name = "product_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "tag_id", referencedColumnName = "id"))
+    @ToString.Exclude
     private Set<Tag> tags;
 
 

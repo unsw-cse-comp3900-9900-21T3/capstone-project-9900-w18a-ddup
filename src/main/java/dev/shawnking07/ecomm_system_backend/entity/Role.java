@@ -3,6 +3,7 @@ package dev.shawnking07.ecomm_system_backend.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -14,9 +15,11 @@ import java.util.Collection;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString(callSuper = true)
 public class Role extends BaseEntity {
     private String name;
     @ManyToMany(mappedBy = "roles")
+    @ToString.Exclude
     private Collection<User> users;
 
     @ManyToMany
@@ -26,6 +29,7 @@ public class Role extends BaseEntity {
                     name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "privilege_id", referencedColumnName = "id"))
+    @ToString.Exclude
     private Collection<Privilege> privileges;
 
     public Role(String name) {

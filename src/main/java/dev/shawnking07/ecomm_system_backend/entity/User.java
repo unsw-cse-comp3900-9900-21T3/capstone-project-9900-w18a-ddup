@@ -1,16 +1,16 @@
 package dev.shawnking07.ecomm_system_backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.jsonwebtoken.lang.Collections;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Collection;
 
 @Entity
 @Table(indexes = {
@@ -19,6 +19,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString(callSuper = true)
 public class User extends BaseEntity {
     private String firstname;
     private String lastname;
@@ -38,12 +39,28 @@ public class User extends BaseEntity {
                     name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
-    private Set<Role> roles = new HashSet<>();
+    private Collection<Role> roles;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "buyer")
-    private List<Order> purchases = new ArrayList<>();
+    @ToString.Exclude
+    private Collection<Order> purchases;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "payer")
-    private List<Order> paidOrders = new ArrayList<>();
+    @ToString.Exclude
+    private Collection<Order> paidOrders;
+
+    public void addPurchasedOrder(Order order) {
+        if (Collections.isEmpty(purchases)) {
+            purchases = new ArrayList<>();
+        }
+        purchases.add(order);
+    }
+
+    public void addPaidOrder(Order order) {
+        if (Collections.isEmpty(paidOrders)) {
+            paidOrders = new ArrayList<>();
+        }
+        paidOrders.add(order);
+    }
 
 }

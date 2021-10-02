@@ -3,31 +3,43 @@ package dev.shawnking07.ecomm_system_backend.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString(callSuper = true)
 public class Order extends BaseEntity {
     private String comments;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User buyer;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User payer;
 
     @ElementCollection
-    private List<OrderProducts> products = new ArrayList<>();
-
+    private List<OrderProducts> products;
+    @NotNull
+    @Min(0)
     private BigDecimal totalPrice;
     private String shippingAddress;
 
+    public void addProduct(Product product, Long amount) {
+        OrderProducts orderProducts = new OrderProducts();
+        orderProducts.setProduct(product);
+        orderProducts.setAmount(amount);
+        this.products.add(orderProducts);
+    }
+
 
     @Embeddable
+    @ToString
     public static class OrderProducts {
         @OneToOne
         protected Product product;

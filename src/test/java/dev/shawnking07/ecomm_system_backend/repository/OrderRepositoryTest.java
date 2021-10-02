@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -69,15 +66,19 @@ class OrderRepositoryTest {
         user.setEmail("dd@test.com");
         user.setFirstname("tester1");
         user.setCreatedBy("TESTER");
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
 
         order.setBuyer(user);
         order.setPayer(user);
         order.setTotalPrice(new BigDecimal(200));
         order.setCreatedBy("TESTER");
 
+        user.addPaidOrder(order);
+        user.addPurchasedOrder(order);
+//        userRepository.saveAndFlush(user);
         orderRepository.save(order);
-        log.info("Saved order");
+        log.info("Saved order, buyer: [{}]", order.getBuyer().getEmail());
+        log.info("[Order info]: {}", order);
         return order.getId();
     }
 
@@ -105,10 +106,7 @@ class OrderRepositoryTest {
         assertTrue(byEmailIgnoreCase.isPresent());
         User user = byEmailIgnoreCase.get();
 
-        List<Order> purchases = user.getPurchases();
-        if (purchases.size() == 0) {
-            purchases = user.getPurchases();
-        }
+        Collection<Order> purchases = user.getPurchases();
         assertEquals(1, purchases.size());
     }
 
