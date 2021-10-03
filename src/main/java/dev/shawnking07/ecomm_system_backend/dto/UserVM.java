@@ -20,7 +20,7 @@ public class UserVM {
     @Size(min = 4, max = 100)
     @Schema(example = "my name is jacky.w")
     private String password;
-    private boolean enabled;
+    private Boolean enabled;
     @Schema(example = "Kensington NSW, AU")
     private String address;
     @Schema(example = "2000")
