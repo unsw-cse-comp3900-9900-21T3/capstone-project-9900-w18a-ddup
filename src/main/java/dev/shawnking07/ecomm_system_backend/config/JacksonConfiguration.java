@@ -59,7 +59,8 @@ public class JacksonConfiguration {
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration()
-                .setFullTypeMatchingRequired(true);
+                .setFullTypeMatchingRequired(true)
+                .setSkipNullEnabled(true);
         return modelMapper;
     }
 }

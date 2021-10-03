@@ -63,7 +63,7 @@ class OrderRepositoryTest {
         order.setProducts(List.of(orderProducts));
 
         User user = new User();
-        user.setEmail("dd@test.com");
+        user.setUsername("dd@test.com");
         user.setFirstname("tester1");
         user.setCreatedBy("TESTER");
         userRepository.saveAndFlush(user);
@@ -77,7 +77,7 @@ class OrderRepositoryTest {
         user.addPurchasedOrder(order);
 //        userRepository.saveAndFlush(user);
         orderRepository.save(order);
-        log.info("Saved order, buyer: [{}]", order.getBuyer().getEmail());
+        log.info("Saved order, buyer: [{}]", order.getBuyer().getUsername());
         log.info("[Order info]: {}", order);
         return order.getId();
     }
@@ -87,7 +87,7 @@ class OrderRepositoryTest {
 
         Order order = orderRepository.getById(orderId);
         assertEquals(new BigDecimal(200), order.getTotalPrice());
-        assertEquals("dd@test.com", order.getBuyer().getEmail());
+        assertEquals("dd@test.com", order.getBuyer().getUsername());
 
         var products = order.getProducts();
         assertEquals(1, products.size());
@@ -102,7 +102,7 @@ class OrderRepositoryTest {
 
     @Test
     public void testUserOrder() {
-        Optional<User> byEmailIgnoreCase = userRepository.findByEmailIgnoreCase("dd@test.com");
+        Optional<User> byEmailIgnoreCase = userRepository.findByUsernameIgnoreCase("dd@test.com");
         assertTrue(byEmailIgnoreCase.isPresent());
         User user = byEmailIgnoreCase.get();
 

@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Jacksonized
@@ -14,11 +14,11 @@ import javax.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class LoginVM {
-    @NotNull
+    @NotBlank
     @Size(min = 4, max = 50)
     @Schema(example = "admin@test.com")
     private String username;
-    @NotNull
+    @NotBlank
     @Size(min = 4, max = 100)
     @Schema(example = "admin")
     private String password;

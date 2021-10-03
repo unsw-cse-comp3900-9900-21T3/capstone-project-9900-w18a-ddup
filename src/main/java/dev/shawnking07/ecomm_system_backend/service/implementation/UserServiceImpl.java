@@ -2,11 +2,13 @@ package dev.shawnking07.ecomm_system_backend.service.implementation;
 
 import dev.shawnking07.ecomm_system_backend.dto.RegisterVM;
 import dev.shawnking07.ecomm_system_backend.dto.UserVM;
+import dev.shawnking07.ecomm_system_backend.entity.BaseEntity;
 import dev.shawnking07.ecomm_system_backend.entity.User;
 import dev.shawnking07.ecomm_system_backend.repository.RoleRepository;
 import dev.shawnking07.ecomm_system_backend.repository.UserRepository;
 import dev.shawnking07.ecomm_system_backend.security.SecurityUtils;
 import dev.shawnking07.ecomm_system_backend.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,14 +32,14 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean duplicateUser(String email) {
-        return userRepository.findByEmailIgnoreCase(email).isPresent();
+        return userRepository.findByUsernameIgnoreCase(email).isPresent();
     }
 
     @Override
     public void register(RegisterVM registerVM) {
         User user = modelMapper.map(registerVM, User.class);
-        if (duplicateUser(user.getEmail())) {
-            throw new RuntimeException("Duplicate user: " + registerVM.getEmail());
+        if (duplicateUser(user.getUsername())) {
+            throw new RuntimeException("Duplicate user: " + registerVM.getUsername());
         }
         user.setPassword(passwordEncoder.encode(registerVM.getPassword()));
         if (registerVM.getUserType() == RegisterVM.UserType.ADMIN) {
@@ -49,16 +51,50 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void editUser(Long id, @NotNull UserVM userVM) {
-        User user = modelMapper.map(userVM, User.class);
-        if (id == null && SecurityUtils.getCurrentUserLogin().isPresent()) {
-            String username = SecurityUtils.getCurrentUserLogin().get();
-            Optional<User> byEmailIgnoreCase = userRepository.findByEmailIgnoreCase(username);
-            if (byEmailIgnoreCase.isPresent()) {
-                id = byEmailIgnoreCase.get().getId();
-            }
+    public Optional<User> getCurrentUser() {
+        Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+        if (currentUserLogin.isEmpty()) return Optional.empty();
+        String s = currentUserLogin.get();
+        return userRepository.findByUsernameIgnoreCase(s);
+    }
+
+    @Override
+    public Long getCurrentUserId() {
+        return getCurrentUser().map(BaseEntity::getId).orElse(null);
+    }
+
+    @Override
+    public Optional<User> editUser(Long id, @NotNull UserVM userVM) {
+        Optional<User> byId = userRepository.findById(id);
+        if (byId.isEmpty()) {
+            throw new RuntimeException("id does not exist");
         }
+        User user = byId.get();
+        modelMapper.map(userVM, user);
         user.setId(id);
-        userRepository.save(user);
+        if (StringUtils.isNotBlank(userVM.getPassword()))
+            user.setPassword(passwordEncoder.encode(userVM.getPassword()));
+        return Optional.of(userRepository.save(user));
+    }
+
+    @Override
+    public Optional<User> editCurrentUser(UserVM userVM) {
+        Optional<User> currentUser = getCurrentUser();
+        if (currentUser.isEmpty()) {
+            throw new RuntimeException("Account error, you need to re-login");
+        }
+        User user = currentUser.get();
+        modelMapper.map(userVM, user);
+        if (StringUtils.isNotBlank(userVM.getPassword()))
+            user.setPassword(passwordEncoder.encode(userVM.getPassword()));
+
+        return Optional.of(userRepository.save(user));
+    }
+
+    @Override
+    public Optional<User> loadMyInformation() {
+        Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+        if (currentUserLogin.isEmpty()) return Optional.empty();
+        return userRepository.findByUsernameIgnoreCase(currentUserLogin.get());
     }
 }

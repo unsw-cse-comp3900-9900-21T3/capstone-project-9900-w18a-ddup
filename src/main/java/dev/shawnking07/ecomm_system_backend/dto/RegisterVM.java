@@ -1,10 +1,12 @@
 package dev.shawnking07.ecomm_system_backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -13,14 +15,18 @@ import javax.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class RegisterVM {
-    @NotNull
+    @NotBlank
     @Size(min = 4, max = 50)
-    private String email;
-    @NotNull
+    @Schema(example = "jacky.w")
+    private String username;
+    @NotBlank
+    @Schema(example = "Jack")
     private String firstname;
+    @Schema(example = "W")
     private String lastname;
-    @NotNull
+    @NotBlank
     @Size(min = 4, max = 100)
+    @Schema(example = "example passwd")
     private String password;
     private String address;
     private String postcode;
@@ -28,7 +34,7 @@ public class RegisterVM {
     private UserType userType;
 
     public enum UserType {
-        ADMIN,
-        USER
+        USER,
+        ADMIN
     }
 }

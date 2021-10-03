@@ -14,7 +14,7 @@ import java.util.Collection;
 
 @Entity
 @Table(indexes = {
-        @Index(columnList = "email", unique = true)
+        @Index(columnList = "username", unique = true)
 })
 @Getter
 @Setter
@@ -23,8 +23,8 @@ import java.util.Collection;
 public class User extends BaseEntity {
     private String firstname;
     private String lastname;
-    @Column(unique = true, length = 50)
-    private String email;
+    @Column(name = "username", unique = true, length = 50, nullable = false)
+    private String username;
     @JsonIgnore
     private String password;
     private boolean enabled = Boolean.TRUE;

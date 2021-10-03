@@ -1,11 +1,11 @@
 package dev.shawnking07.ecomm_system_backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Jacksonized
@@ -13,17 +13,17 @@ import javax.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class UserVM {
-    @NotNull
+    @Schema(example = "Jacky")
     private String firstname;
+    @Schema(example = "Wong")
     private String lastname;
-    @NotNull
-    @Size(min = 4, max = 50)
-    private String email;
-    @NotNull
     @Size(min = 4, max = 100)
+    @Schema(example = "my name is jacky.w")
     private String password;
     private boolean enabled;
+    @Schema(example = "Kensington NSW, AU")
     private String address;
+    @Schema(example = "2000")
     private String postcode;
 //    private Set<Long> roles;
 }

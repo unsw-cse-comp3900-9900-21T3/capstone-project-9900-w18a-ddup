@@ -38,7 +38,7 @@ class UserServiceTest {
         RegisterVM john = RegisterVM.builder()
                 .firstname("John")
                 .lastname("Doe")
-                .email(email)
+                .username(email)
                 .password("12345678")
                 .userType(RegisterVM.UserType.USER)
                 .build();
@@ -46,7 +46,7 @@ class UserServiceTest {
 
         log.info("[Register] user [{}] created!", email);
 
-        Optional<User> byEmailIgnoreCase = userRepository.findByEmailIgnoreCase(email);
+        Optional<User> byEmailIgnoreCase = userRepository.findByUsernameIgnoreCase(email);
         assertTrue(byEmailIgnoreCase.isPresent());
         User user = byEmailIgnoreCase.get();
 
@@ -54,7 +54,7 @@ class UserServiceTest {
 
         assertEquals("John", user.getFirstname());
         assertEquals("Doe", user.getLastname());
-        assertEquals(email, user.getEmail());
+        assertEquals(email, user.getUsername());
         assertTrue(user.isEnabled());
         assertTrue(passwordEncoder.matches("12345678", user.getPassword()));
     }
@@ -67,13 +67,12 @@ class UserServiceTest {
         UserVM userVM = UserVM.builder()
                 .firstname("John")
                 .lastname("Doe")
-                .email("john.d@test.com")
                 .password(passwordEncoder.encode("11223344"))
                 .address(address)
                 .build();
         userService.editUser(null, userVM);
 
-        Optional<User> byEmailIgnoreCase = userRepository.findByEmailIgnoreCase("john.d@test.com");
+        Optional<User> byEmailIgnoreCase = userRepository.findByUsernameIgnoreCase("john.d@test.com");
         assertTrue(byEmailIgnoreCase.isPresent());
         User user = byEmailIgnoreCase.get();
         assertEquals(address, user.getAddress());
@@ -87,13 +86,12 @@ class UserServiceTest {
         UserVM userVM = UserVM.builder()
                 .firstname("John")
                 .lastname("Doe")
-                .email("john.d@test.com")
                 .password(passwordEncoder.encode("11223344"))
                 .address(address)
                 .build();
         userService.editUser(userId, userVM);
 
-        Optional<User> byEmailIgnoreCase = userRepository.findByEmailIgnoreCase("john.d@test.com");
+        Optional<User> byEmailIgnoreCase = userRepository.findByUsernameIgnoreCase("john.d@test.com");
         assertTrue(byEmailIgnoreCase.isPresent());
         User user = byEmailIgnoreCase.get();
         assertEquals(address, user.getAddress());

@@ -11,10 +11,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -34,9 +36,9 @@ public class TokenProvider {
     private final Duration tokenValidityInMillisecondsForRememberMe;
 
     public TokenProvider(ApplicationProperties applicationProperties) {
-//        String secret = applicationProperties.getJwt().getSecret();
-//        key = Keys.hmacShaKeyFor(Base64.getEncoder().encode(secret.getBytes(StandardCharsets.UTF_8)));
-        key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        String secret = applicationProperties.getJwt().getSecret();
+        key = Keys.hmacShaKeyFor(Base64.getEncoder().encode(secret.getBytes(StandardCharsets.UTF_8)));
+//        key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
         jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
         this.tokenValidityInMilliseconds = applicationProperties.getJwt().getTokenValidity();
         this.tokenValidityInMillisecondsForRememberMe = applicationProperties.getJwt().getTokenValidityForRememberMe();

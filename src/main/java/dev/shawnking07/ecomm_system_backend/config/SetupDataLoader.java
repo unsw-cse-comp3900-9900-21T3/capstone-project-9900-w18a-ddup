@@ -60,7 +60,7 @@ public class SetupDataLoader implements
         Role role_user = createRoleIfNotFound("ROLE_USER", generalPrivilege);
 
         String email = "admin@test.com";
-        Optional<User> byEmailIgnoreCase = userRepository.findByEmailIgnoreCase(email);
+        Optional<User> byEmailIgnoreCase = userRepository.findByUsernameIgnoreCase(email);
         if (byEmailIgnoreCase.isPresent()) {
             log.info("[Init Data] (admin@test.com:admin) already exists!");
             return;
@@ -69,7 +69,7 @@ public class SetupDataLoader implements
         user.setFirstname("John");
         user.setLastname("Doe");
         user.setPassword(passwordEncoder.encode("admin"));
-        user.setEmail("admin@test.com");
+        user.setUsername("admin@test.com");
         user.setRoles(Set.of(role_admin, role_user));
         user.setEnabled(true);
         userRepository.save(user);

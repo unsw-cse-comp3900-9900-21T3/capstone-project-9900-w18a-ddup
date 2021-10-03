@@ -72,14 +72,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            Optional<User> user = userRepository.findByEmailIgnoreCase(username);
+            Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
             if (user.isEmpty()) {
                 log.info("[Security] User [{}] has not register", username);
                 throw new UsernameNotFoundException("You are not registered!");
             }
             User loginUser = user.get();
             return new org.springframework.security.core.userdetails.User(
-                    loginUser.getEmail(),
+                    loginUser.getUsername(),
                     loginUser.getPassword(),
                     loginUser.isEnabled(),
                     true,
