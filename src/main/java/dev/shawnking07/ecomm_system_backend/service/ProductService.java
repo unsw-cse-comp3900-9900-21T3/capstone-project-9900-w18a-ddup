@@ -1,4 +1,4 @@
-package dev.shawnking07.ecomm_system_backend.service.implementation;
+package dev.shawnking07.ecomm_system_backend.service;
 
 import dev.shawnking07.ecomm_system_backend.entity.Product;
 import org.springframework.data.domain.Page;

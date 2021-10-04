@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
-public class LoginVM {
+public class LoginDTO {
     @NotBlank
     @Size(min = 4, max = 50)
     @Schema(example = "admin@test.com")

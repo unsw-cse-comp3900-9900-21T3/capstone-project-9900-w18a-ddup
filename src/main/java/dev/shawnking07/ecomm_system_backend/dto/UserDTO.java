@@ -6,35 +6,24 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Jacksonized
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
-public class RegisterVM {
-    @NotBlank
-    @Size(min = 4, max = 50)
-    @Schema(example = "jacky.w")
-    private String username;
-    @NotBlank
-    @Schema(example = "Jack")
+public class UserDTO {
+    @Schema(example = "Jacky")
     private String firstname;
-    @Schema(example = "W")
+    @Schema(example = "Wong")
     private String lastname;
-    @NotBlank
     @Size(min = 4, max = 100)
-    @Schema(example = "example passwd")
+    @Schema(example = "my name is jacky.w")
     private String password;
+    @Builder.Default
+    private Boolean enabled = Boolean.TRUE;
+    @Schema(example = "Kensington NSW, AU")
     private String address;
+    @Schema(example = "2000")
     private String postcode;
-    @NotNull
-    private UserType userType;
-
-    public enum UserType {
-        USER,
-        ADMIN
-    }
 }

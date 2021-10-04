@@ -1,8 +1,8 @@
 package dev.shawnking07.ecomm_system_backend.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import dev.shawnking07.ecomm_system_backend.dto.LoginVM;
-import dev.shawnking07.ecomm_system_backend.dto.RegisterVM;
+import dev.shawnking07.ecomm_system_backend.dto.LoginDTO;
+import dev.shawnking07.ecomm_system_backend.dto.RegisterDTO;
 import dev.shawnking07.ecomm_system_backend.security.jwt.JWTFilter;
 import dev.shawnking07.ecomm_system_backend.security.jwt.TokenProvider;
 import dev.shawnking07.ecomm_system_backend.service.UserService;
@@ -37,11 +37,11 @@ public class AccountController {
             description = "this may be the only api does not satisfy RESTful")
     @PreAuthorize("permitAll()")
     @PostMapping("/login")
-    public ResponseEntity<JWTToken> login(@Valid @RequestBody LoginVM loginVM) {
-        var token = new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
+    public ResponseEntity<JWTToken> login(@Valid @RequestBody LoginDTO loginDTO) {
+        var token = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
         var authentication = authenticationManagerBuilder.getObject().authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.createToken(authentication, loginVM.isRememberMe());
+        String jwt = tokenProvider.createToken(authentication, loginDTO.isRememberMe());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
@@ -51,8 +51,8 @@ public class AccountController {
     @PreAuthorize("permitAll()")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
-    public void register(@Valid @RequestBody RegisterVM registerVM) {
-        userService.register(registerVM);
+    public void register(@Valid @RequestBody RegisterDTO registerDTO) {
+        userService.register(registerDTO);
     }
 
     /**

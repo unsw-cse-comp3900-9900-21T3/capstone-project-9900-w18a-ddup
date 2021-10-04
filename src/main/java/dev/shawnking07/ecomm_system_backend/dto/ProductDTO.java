@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
-public class ProductVM {
+public class ProductDTO {
     @NotBlank
     private String name;
     @Min(0)
@@ -23,5 +23,6 @@ public class ProductVM {
     @Min(0)
     private BigDecimal discountPrice;
     @Min(1)
+    @Builder.Default
     private Long amount = 1L;
 }

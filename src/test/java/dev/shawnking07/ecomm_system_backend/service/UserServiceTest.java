@@ -1,7 +1,8 @@
 package dev.shawnking07.ecomm_system_backend.service;
 
-import dev.shawnking07.ecomm_system_backend.dto.RegisterVM;
-import dev.shawnking07.ecomm_system_backend.dto.UserVM;
+import dev.shawnking07.ecomm_system_backend.dto.RegisterDTO;
+import dev.shawnking07.ecomm_system_backend.dto.UserDTO;
+import dev.shawnking07.ecomm_system_backend.dto.UserType;
 import dev.shawnking07.ecomm_system_backend.entity.User;
 import dev.shawnking07.ecomm_system_backend.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -35,12 +36,12 @@ class UserServiceTest {
     @BeforeEach
     void register() {
         String email = "john.d@test.com";
-        RegisterVM john = RegisterVM.builder()
+        RegisterDTO john = RegisterDTO.builder()
                 .firstname("John")
                 .lastname("Doe")
                 .username(email)
                 .password("12345678")
-                .userType(RegisterVM.UserType.USER)
+                .userType(UserType.USER)
                 .build();
         userService.register(john);
 
@@ -64,13 +65,13 @@ class UserServiceTest {
     @Transactional
     void editMyself() {
         String address = "new address test";
-        UserVM userVM = UserVM.builder()
+        UserDTO userDTO = UserDTO.builder()
                 .firstname("John")
                 .lastname("Doe")
                 .password(passwordEncoder.encode("11223344"))
                 .address(address)
                 .build();
-        userService.editUser(null, userVM);
+        userService.editUser(null, userDTO);
 
         Optional<User> byEmailIgnoreCase = userRepository.findByUsernameIgnoreCase("john.d@test.com");
         assertTrue(byEmailIgnoreCase.isPresent());
@@ -83,13 +84,13 @@ class UserServiceTest {
     @Transactional
     void adminEditUser() {
         String address = "new address test";
-        UserVM userVM = UserVM.builder()
+        UserDTO userDTO = UserDTO.builder()
                 .firstname("John")
                 .lastname("Doe")
                 .password(passwordEncoder.encode("11223344"))
                 .address(address)
                 .build();
-        userService.editUser(userId, userVM);
+        userService.editUser(userId, userDTO);
 
         Optional<User> byEmailIgnoreCase = userRepository.findByUsernameIgnoreCase("john.d@test.com");
         assertTrue(byEmailIgnoreCase.isPresent());
