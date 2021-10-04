@@ -33,8 +33,8 @@ public class DbFile extends BaseEntity {
     }
 
     public void setContent(byte[] content) {
-        byte[] content1 = new byte[this.content.length];
-        System.arraycopy(this.content, 0, content1, 0, this.content.length);
+        byte[] content1 = new byte[content.length];
+        System.arraycopy(content, 0, content1, 0, content.length);
         this.content = content1;
     }
 }
