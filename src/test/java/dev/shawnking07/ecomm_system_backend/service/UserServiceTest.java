@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -61,6 +62,7 @@ class UserServiceTest {
 
     @Test
     @WithMockUser(username = "john.d@test.com")
+    @Transactional
     void editMyself() {
         String address = "new address test";
         UserDTO userDTO = UserDTO.builder()
@@ -79,6 +81,7 @@ class UserServiceTest {
 
     @Test
     @WithMockUser(username = "admin@test.com", roles = {"admin"})
+    @Transactional
     void adminEditUser() {
         String address = "new address test";
         UserDTO userDTO = UserDTO.builder()
