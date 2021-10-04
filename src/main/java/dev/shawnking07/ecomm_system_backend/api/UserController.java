@@ -24,7 +24,7 @@ public class UserController {
     @Operation(summary = "Edit user info for admin", description = "You should access this api with admin role")
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public void edit(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
         userService.editUser(id, userDTO);
     }
@@ -32,7 +32,7 @@ public class UserController {
     @Operation(summary = "Edit user info for himself", description = "You should access this api with jwt token")
     @PreAuthorize("hasRole('ROLE_USER')")
     @SecurityRequirement(name = "bearerAuth")
-    @PutMapping()
+    @PatchMapping
     public void edit(@Valid @RequestBody UserDTO userDTO) {
         userService.editCurrentUser(userDTO);
     }

@@ -10,6 +10,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -24,5 +25,6 @@ public class ProductDTO {
     private BigDecimal discountPrice;
     @Positive
     private Long amount = 1L;
+    private Set<String> tags;
     private List<MultipartFile> files;
 }

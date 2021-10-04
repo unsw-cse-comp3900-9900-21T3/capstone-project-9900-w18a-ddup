@@ -30,36 +30,24 @@ public class Order extends BaseEntity {
     private BigDecimal totalPrice;
     private String shippingAddress;
 
-    public void addProduct(Product product, Long amount) {
+    public void addProduct(Product product, Long amount, Boolean discount) {
         OrderProducts orderProducts = new OrderProducts();
         orderProducts.setProduct(product);
         orderProducts.setAmount(amount);
+        orderProducts.setDiscount(discount);
         this.products.add(orderProducts);
     }
 
 
+    @Getter
+    @Setter
     @Embeddable
     @ToString
     public static class OrderProducts {
         @OneToOne
-        protected Product product;
-        protected Long amount = 1L;
-
-        public Product getProduct() {
-            return product;
-        }
-
-        public void setProduct(Product product) {
-            this.product = product;
-        }
-
-        public Long getAmount() {
-            return amount;
-        }
-
-        public void setAmount(Long amount) {
-            this.amount = amount;
-        }
+        private Product product;
+        private Long amount = 1L;
+        private Boolean discount;
     }
 
 }

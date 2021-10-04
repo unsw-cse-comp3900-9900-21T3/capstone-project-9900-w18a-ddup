@@ -1,5 +1,6 @@
 package dev.shawnking07.ecomm_system_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,9 +16,14 @@ import java.util.Collection;
 @NoArgsConstructor
 @ToString(callSuper = true)
 public class Tag extends BaseEntity {
-    private String name;
-    private Integer priorityOrder;
     @ManyToMany(mappedBy = "tags")
     @ToString.Exclude
+    @JsonIgnore
     private Collection<Product> products;
+
+    private String name;
+
+    public Tag(String name) {
+        this.name = name;
+    }
 }

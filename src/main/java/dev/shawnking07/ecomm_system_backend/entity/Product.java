@@ -25,7 +25,7 @@ public class Product extends BaseEntity {
     @ToString.Exclude
     private Collection<DbFile> images;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "products_tags",
             joinColumns = @JoinColumn(

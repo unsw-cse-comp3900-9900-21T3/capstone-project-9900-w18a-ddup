@@ -32,6 +32,8 @@ public interface ProductService {
      */
     void deleteProduct(Long id);
 
+    ProductVM queryProduct(Long id);
+
     /**
      * Simply return all products
      *

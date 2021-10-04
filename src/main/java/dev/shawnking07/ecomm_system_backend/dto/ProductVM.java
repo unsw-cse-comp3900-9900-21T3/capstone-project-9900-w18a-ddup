@@ -5,10 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @Jacksonized
 @Builder
@@ -17,13 +16,10 @@ import java.util.List;
 public class ProductVM {
     private String name;
     private String description;
-    @PositiveOrZero
     private BigDecimal price;
-    @PositiveOrZero
     private BigDecimal discountPrice;
-    @Positive
-    @Builder.Default
-    private Long amount = 1L;
+    private Long amount;
+    private Set<String> tags;
 
     private List<String> imagePaths;
 }
