@@ -1,5 +1,7 @@
 package dev.shawnking07.ecomm_system_backend.service;
 
+import dev.shawnking07.ecomm_system_backend.dto.ProductDTO;
+import dev.shawnking07.ecomm_system_backend.dto.ProductVM;
 import dev.shawnking07.ecomm_system_backend.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,16 +11,19 @@ import java.util.List;
 public interface ProductService {
     /**
      * create new product
+     *
+     * @param productDTO
      */
-    Product addProduct();
+    Product addProduct(ProductDTO productDTO);
 
     /**
      * edit a product
      *
-     * @param id Product id
+     * @param id         Product id
+     * @param productDTO product info
      * @return edited product
      */
-    Product editProduct(Long id);
+    Product editProduct(Long id, ProductDTO productDTO);
 
     /**
      * delete a product
@@ -32,7 +37,7 @@ public interface ProductService {
      *
      * @return All Products
      */
-    List<Product> listProducts();
+    List<ProductVM> listProducts();
 
     /**
      * List current user's recommended products <br>

@@ -113,6 +113,12 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
         return create(ex, problem, request);
     }
 
+    @ExceptionHandler
+    public ResponseEntity<Problem> resourceNotFound(ResourceNotFoundException ex, NativeWebRequest request) {
+        Problem problem = Problem.builder().withStatus(Status.NOT_FOUND).with(MESSAGE_KEY, "error.not_found").build();
+        return create(ex, problem, request);
+    }
+
     @Override
     public ProblemBuilder prepare(final Throwable throwable, final StatusType status, final URI type) {
         Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());

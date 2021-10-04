@@ -1,11 +1,11 @@
 package dev.shawnking07.ecomm_system_backend.service.implementation;
 
+import dev.shawnking07.ecomm_system_backend.api.error.ResourceNotFoundException;
 import dev.shawnking07.ecomm_system_backend.dto.RegisterDTO;
 import dev.shawnking07.ecomm_system_backend.dto.UserDTO;
 import dev.shawnking07.ecomm_system_backend.dto.UserVM;
 import dev.shawnking07.ecomm_system_backend.entity.BaseEntity;
 import dev.shawnking07.ecomm_system_backend.entity.User;
-import dev.shawnking07.ecomm_system_backend.repository.RoleRepository;
 import dev.shawnking07.ecomm_system_backend.repository.UserRepository;
 import dev.shawnking07.ecomm_system_backend.security.SecurityUtils;
 import dev.shawnking07.ecomm_system_backend.service.RoleService;
@@ -22,14 +22,12 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleService roleService) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleService roleService) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
@@ -67,7 +65,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> editUser(Long id, @NotNull UserDTO userDTO) {
         Optional<User> byId = userRepository.findById(id);
         if (byId.isEmpty()) {
-            throw new RuntimeException("id does not exist");
+            throw new ResourceNotFoundException("id does not exist");
         }
         User user = byId.get();
         modelMapper.map(userDTO, user);

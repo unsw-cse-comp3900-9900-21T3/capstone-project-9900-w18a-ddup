@@ -1,5 +1,6 @@
 package dev.shawnking07.ecomm_system_backend.service;
 
+import dev.shawnking07.ecomm_system_backend.ECommTestConfiguration;
 import dev.shawnking07.ecomm_system_backend.dto.RegisterDTO;
 import dev.shawnking07.ecomm_system_backend.dto.UserDTO;
 import dev.shawnking07.ecomm_system_backend.dto.UserType;
@@ -10,9 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 @SpringBootTest
-@ActiveProfiles("test")
+@Import(ECommTestConfiguration.class)
 class UserServiceTest {
     @Autowired
     private UserService userService;
