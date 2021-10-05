@@ -18,7 +18,7 @@ import java.util.List;
 public class OrderDTO {
     @NotNull
     private List<OrderProductsDTO> products;
-    private Long payerId;
+    private String payerUsername;
     @NotBlank
     private String shippingAddress;
     @Schema(hidden = true)

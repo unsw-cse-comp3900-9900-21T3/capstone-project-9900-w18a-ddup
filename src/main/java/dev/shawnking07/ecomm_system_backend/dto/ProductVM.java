@@ -14,6 +14,7 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class ProductVM {
+    private Long id;
     private String name;
     private String description;
     private BigDecimal price;

@@ -20,6 +20,7 @@ public class Product extends BaseEntity {
     private String description;
     private BigDecimal price;
     private BigDecimal discountPrice;
+    @Column
     private Long amount = 1L;
     @OneToMany(cascade = CascadeType.ALL)
     @ToString.Exclude

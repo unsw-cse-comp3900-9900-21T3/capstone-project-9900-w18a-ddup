@@ -5,22 +5,18 @@ import dev.shawnking07.ecomm_system_backend.dto.ProductDTO;
 import dev.shawnking07.ecomm_system_backend.dto.ProductVM;
 import dev.shawnking07.ecomm_system_backend.entity.DbFile;
 import dev.shawnking07.ecomm_system_backend.entity.Product;
-import dev.shawnking07.ecomm_system_backend.entity.Tag;
 import dev.shawnking07.ecomm_system_backend.repository.ProductRepository;
-import dev.shawnking07.ecomm_system_backend.repository.TagRepository;
 import dev.shawnking07.ecomm_system_backend.service.DbFileService;
 import dev.shawnking07.ecomm_system_backend.service.ProductService;
+import dev.shawnking07.ecomm_system_backend.service.TagService;
 import org.modelmapper.ModelMapper;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -32,17 +28,17 @@ public class ProductServiceImpl implements ProductService {
     private final static String productAmountKey = "product.amount.";
 
     private final ProductRepository productRepository;
-    private final TagRepository tagRepository;
+    private final TagService tagService;
     private final ModelMapper modelMapper;
     private final DbFileService dbFileService;
-    @Resource
-    private RedisTemplate<String, Long> redisTemplate;
+    private final StringRedisTemplate redisTemplate;
 
-    public ProductServiceImpl(ProductRepository productRepository, TagRepository tagRepository, ModelMapper modelMapper, DbFileService dbFileService) {
+    public ProductServiceImpl(ProductRepository productRepository, TagService tagService, ModelMapper modelMapper, DbFileService dbFileService, StringRedisTemplate redisTemplate) {
         this.productRepository = productRepository;
-        this.tagRepository = tagRepository;
+        this.tagService = tagService;
         this.modelMapper = modelMapper;
         this.dbFileService = dbFileService;
+        this.redisTemplate = redisTemplate;
     }
 
     private List<DbFile> multipartFile2DbFile(List<MultipartFile> files) {
@@ -60,44 +56,44 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Transactional
-    @CacheEvict(cacheNames = "products", allEntries = true)
+//    @CacheEvict(cacheNames = "products", allEntries = true)
     @Override
-    public Product addProduct(ProductDTO productDTO) {
+    public ProductVM addProduct(ProductDTO productDTO) {
         Product product = modelMapper.map(productDTO, Product.class);
         Set<String> tags = productDTO.getTags();
 
-        product.setTags(tags.stream().map(v -> {
-            Optional<Tag> byNameContains = tagRepository.findByNameContains(v);
-            return byNameContains.orElse(new Tag(v));
-        }).collect(Collectors.toSet()));
+        product.setTags(tags.stream().map(tagService::string2Tag).collect(Collectors.toSet()));
 
         List<DbFile> images = multipartFile2DbFile(productDTO.getFiles());
         product.setImages(images);
         productRepository.save(product);
-        redisTemplate.opsForValue().set(productAmountKey + product.getId(), product.getAmount());
-        return product;
+        redisTemplate.opsForValue().set(productAmountKey + product.getId(), String.valueOf(product.getAmount()));
+        return product2ProductVM(product);
     }
 
-    @CacheEvict(cacheNames = "products", allEntries = true)
+    //    @CacheEvict(cacheNames = "products", allEntries = true)
+    @Transactional
     @Override
-    public Product editProduct(Long id, ProductDTO productDTO) {
+    public ProductVM editProduct(Long id, ProductDTO productDTO) {
         Optional<Product> byId = productRepository.findById(id);
         if (byId.isEmpty()) throw new ResourceNotFoundException("id dose not exist");
         var product = byId.get();
         modelMapper.map(productDTO, product);
         product.setImages(multipartFile2DbFile(productDTO.getFiles()));
         productRepository.save(product);
-        redisTemplate.opsForValue().set(productAmountKey + product.getId(), product.getAmount());
-        return product;
+        redisTemplate.opsForValue().set(productAmountKey + product.getId(), String.valueOf(product.getAmount()));
+        return product2ProductVM(product);
     }
 
-    @CacheEvict(cacheNames = "products", allEntries = true)
+    //    @CacheEvict(cacheNames = "products", allEntries = true)
+    @Transactional
     @Override
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
         redisTemplate.delete(productAmountKey + id);
     }
 
+    @Transactional
     @Override
     public ProductVM queryProduct(Long id) {
         Optional<Product> byId = productRepository.findById(id);
@@ -105,15 +101,37 @@ public class ProductServiceImpl implements ProductService {
         return product2ProductVM(byId.get());
     }
 
-    private ProductVM product2ProductVM(Product product) {
-        Long amount = redisTemplate.opsForValue().get(productAmountKey + product.getId());
-        return modelMapper.map(product, ProductVM.ProductVMBuilder.class)
+    @Override
+    public void setProductAmountToCache(Long id, Long amount) {
+        redisTemplate.opsForValue().set(productAmountKey + id, String.valueOf(amount));
+    }
+
+    @Override
+    public Long getProductAmountFromCache(Long id) {
+        String s = redisTemplate.opsForValue().get(productAmountKey + id);
+        if (s == null) return null;
+        return Long.parseLong(s);
+    }
+
+    @Transactional
+    @Override
+    public ProductVM product2ProductVM(Product product) {
+        Long amount = getProductAmountFromCache(product.getId());
+        if (amount == null) {
+            amount = product.getAmount();
+            setProductAmountToCache(product.getId(), amount);
+        }
+        var ppMap = modelMapper.typeMap(Product.class, ProductVM.ProductVMBuilder.class)
+                .addMappings(mapping -> mapping.skip(ProductVM.ProductVMBuilder::tags));
+        return ppMap.map(product)
+                .tags(product.getTags().stream().map(tagService::tag2String).collect(Collectors.toSet()))
                 .amount(amount)
                 .imagePaths(product.getImages().stream().map(dbFileService::generateDownloadLink).collect(Collectors.toList()))
                 .build();
     }
 
-    @Cacheable(cacheNames = "products")
+    //    @Cacheable(cacheNames = "products")
+    @Transactional
     @Override
     public List<ProductVM> listProducts() {
         return productRepository.findAll().stream()
@@ -122,13 +140,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> listProductsWithRecommendation() {
+    public List<ProductVM> listProductsWithRecommendation() {
         // TODO: recommendation
         return null;
     }
 
     @Override
-    public Page<Product> listProductsWithRecommendation(Pageable pageable) {
+    public Page<ProductVM> listProductsWithRecommendation(Pageable pageable) {
         return null;
     }
 }

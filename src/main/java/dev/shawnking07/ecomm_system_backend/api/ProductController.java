@@ -1,18 +1,17 @@
 package dev.shawnking07.ecomm_system_backend.api;
 
 import dev.shawnking07.ecomm_system_backend.dto.ProductDTO;
+import dev.shawnking07.ecomm_system_backend.dto.ProductVM;
 import dev.shawnking07.ecomm_system_backend.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -29,11 +28,39 @@ public class ProductController {
     )
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping(consumes = {
+    @PostMapping(consumes = {
             MediaType.MULTIPART_FORM_DATA_VALUE
     })
     @ResponseStatus(HttpStatus.CREATED)
-    public void addProduct(@Valid ProductDTO productDTO) {
-        productService.addProduct(productDTO);
+    public ProductVM addProduct(@Valid ProductDTO productDTO) {
+        return productService.addProduct(productDTO);
+    }
+
+    @Operation(summary = "Partial update product info")
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PatchMapping("/{id}")
+    public ProductVM editProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO productDTO) {
+        return productService.editProduct(id, productDTO);
+    }
+
+    @Operation(summary = "Delete product info")
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/{id}")
+    public void deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+    }
+
+    @Operation(summary = "Query product by id")
+    @GetMapping("/{id}")
+    public ProductVM queryProduct(@PathVariable Long id) {
+        return productService.queryProduct(id);
+    }
+
+    @Operation(summary = "List all products", description = "Cache disabled now, all infos are basically realtime")
+    @GetMapping
+    public List<ProductVM> listAllProducts() {
+        return productService.listProducts();
     }
 }

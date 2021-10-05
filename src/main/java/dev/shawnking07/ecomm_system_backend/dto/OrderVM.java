@@ -19,6 +19,7 @@ public class OrderVM {
     private List<OrderProductsVM> products;
     private BigDecimal totalPrice;
     private String shippingAddress;
+    private String buyer;
     private String payer;
 
     @Jacksonized
@@ -27,6 +28,7 @@ public class OrderVM {
     @Getter
     public static class OrderProductsVM {
         private ProductVM product;
+        private Boolean discount;
         private Long amount;
     }
 }

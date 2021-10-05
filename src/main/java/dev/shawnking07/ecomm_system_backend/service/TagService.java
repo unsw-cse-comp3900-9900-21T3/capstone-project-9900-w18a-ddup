@@ -41,4 +41,8 @@ public interface TagService {
      * @return all tag names
      */
     List<String> findAllTags();
+
+    String tag2String(Tag tag);
+
+    Tag string2Tag(String tag);
 }

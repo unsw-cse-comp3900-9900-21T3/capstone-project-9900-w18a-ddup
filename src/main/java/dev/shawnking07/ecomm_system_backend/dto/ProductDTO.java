@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
@@ -19,10 +20,12 @@ public class ProductDTO {
     @NotBlank
     private String name;
     private String description;
+    @NotNull
     @PositiveOrZero
     private BigDecimal price;
     @PositiveOrZero
     private BigDecimal discountPrice;
+    @NotNull
     @Positive
     private Long amount = 1L;
     private Set<String> tags;

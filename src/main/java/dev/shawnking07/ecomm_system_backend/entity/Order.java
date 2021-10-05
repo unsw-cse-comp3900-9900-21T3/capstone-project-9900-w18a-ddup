@@ -6,8 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class Order extends BaseEntity {
     @ElementCollection
     private List<OrderProducts> products;
     @NotNull
-    @Min(0)
+    @Positive
     private BigDecimal totalPrice;
     private String shippingAddress;
 

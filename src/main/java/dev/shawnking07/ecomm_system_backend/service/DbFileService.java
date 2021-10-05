@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 public interface DbFileService {
     /**
-     * generate a random link for download
+     * generate a random link for download <br> link will expire in 10 mins
      *
      * @param id file id
      * @return link

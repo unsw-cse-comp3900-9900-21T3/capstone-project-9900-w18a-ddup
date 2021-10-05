@@ -6,6 +6,7 @@ import dev.shawnking07.ecomm_system_backend.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface ProductService {
@@ -13,8 +14,9 @@ public interface ProductService {
      * create new product
      *
      * @param productDTO
+     * @return
      */
-    Product addProduct(ProductDTO productDTO);
+    ProductVM addProduct(ProductDTO productDTO);
 
     /**
      * edit a product
@@ -23,7 +25,7 @@ public interface ProductService {
      * @param productDTO product info
      * @return edited product
      */
-    Product editProduct(Long id, ProductDTO productDTO);
+    ProductVM editProduct(Long id, ProductDTO productDTO);
 
     /**
      * delete a product
@@ -34,8 +36,15 @@ public interface ProductService {
 
     ProductVM queryProduct(Long id);
 
+    void setProductAmountToCache(Long id, Long amount);
+
+    @Nullable
+    Long getProductAmountFromCache(Long id);
+
+    ProductVM product2ProductVM(Product product);
+
     /**
-     * Simply return all products
+     * Simply return all products <br> cache disabled
      *
      * @return All Products
      */
@@ -47,7 +56,7 @@ public interface ProductService {
      *
      * @return Products
      */
-    List<Product> listProductsWithRecommendation();
+    List<ProductVM> listProductsWithRecommendation();
 
     /**
      * Paged {@link ProductService#listProductsWithRecommendation()}
@@ -55,5 +64,5 @@ public interface ProductService {
      * @param pageable page head information
      * @return paged products
      */
-    Page<Product> listProductsWithRecommendation(Pageable pageable);
+    Page<ProductVM> listProductsWithRecommendation(Pageable pageable);
 }

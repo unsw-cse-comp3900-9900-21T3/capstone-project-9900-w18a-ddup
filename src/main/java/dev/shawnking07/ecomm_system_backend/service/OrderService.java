@@ -2,6 +2,7 @@ package dev.shawnking07.ecomm_system_backend.service;
 
 import dev.shawnking07.ecomm_system_backend.dto.OrderDTO;
 import dev.shawnking07.ecomm_system_backend.dto.OrderVM;
+import dev.shawnking07.ecomm_system_backend.entity.Order;
 
 public interface OrderService {
     /**
@@ -18,4 +19,6 @@ public interface OrderService {
      * @param orderNumber generated orderNumber not id
      */
     void confirmOrder(String orderNumber);
+
+    OrderVM order2orderVM(Order order);
 }

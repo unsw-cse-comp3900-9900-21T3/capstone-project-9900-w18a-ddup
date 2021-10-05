@@ -12,7 +12,8 @@ import java.time.Duration;
 @Getter
 public class ApplicationProperties {
     private final Jwt jwt = new Jwt();
-
+    private final Duration orderExpire = Duration.ofMinutes(15);
+    private final Duration downloadLinkExpire = Duration.ofMinutes(10);
 
     @Setter
     @Getter

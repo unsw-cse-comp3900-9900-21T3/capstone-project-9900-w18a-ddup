@@ -8,6 +8,7 @@ import dev.shawnking07.ecomm_system_backend.entity.BaseEntity;
 import dev.shawnking07.ecomm_system_backend.entity.User;
 import dev.shawnking07.ecomm_system_backend.repository.UserRepository;
 import dev.shawnking07.ecomm_system_backend.security.SecurityUtils;
+import dev.shawnking07.ecomm_system_backend.service.OrderService;
 import dev.shawnking07.ecomm_system_backend.service.RoleService;
 import dev.shawnking07.ecomm_system_backend.service.UserService;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,12 +27,14 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
+    private final OrderService orderService;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleService roleService) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleService roleService, OrderService orderService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
+        this.orderService = orderService;
     }
 
     private boolean duplicateUser(String email) {
@@ -94,15 +98,16 @@ public class UserServiceImpl implements UserService {
     public Optional<UserVM> loadMyInformation() {
         Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
         if (currentUserLogin.isEmpty()) return Optional.empty();
-//        var userTypeMapper = modelMapper.typeMap(User.class, UserVM.UserVMBuilder.class);
-        // TODO: lazy load for orders, needs to be removed
-//        userTypeMapper.addMappings(mapping -> {
-//            mapping.skip(UserVM.UserVMBuilder::purchases);
-//            mapping.skip(UserVM.UserVMBuilder::paidOrders);
-//        });
+        var uuMap = modelMapper.typeMap(User.class, UserVM.UserVMBuilder.class);
+        uuMap.addMappings(mapping -> {
+            mapping.skip(UserVM.UserVMBuilder::purchases);
+            mapping.skip(UserVM.UserVMBuilder::paidOrders);
+        });
         return userRepository.findByUsernameIgnoreCase(currentUserLogin.get())
-                .map(v -> modelMapper.map(v, UserVM.UserVMBuilder.class)
+                .map(v -> uuMap.map(v)
                         .userType(roleService.roles2UserType(v.getRoles()))
+                        .purchases(v.getPurchases().stream().map(orderService::order2orderVM).collect(Collectors.toList()))
+                        .paidOrders(v.getPaidOrders().stream().map(orderService::order2orderVM).collect(Collectors.toList()))
                         .build());
     }
 }

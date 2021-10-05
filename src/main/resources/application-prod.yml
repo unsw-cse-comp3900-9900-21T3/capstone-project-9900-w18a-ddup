@@ -6,7 +6,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
   redis:
     client-type: lettuce
     url: "redis://:ecommpasswd@redis:6379"
@@ -15,3 +15,5 @@ e-comm:
   jwt:
     token-validity: 3d
     token-validity-for-remember-me: 30d
+logging:
+  level: warn
