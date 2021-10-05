@@ -40,7 +40,7 @@ jobs:
           source: "build/jib-image.tar,docker/prod"
           target: "github-action-deploy"
 
-      - name: docker compose up
+      - name: Host docker containers
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DEPLOY_SERVER }}
