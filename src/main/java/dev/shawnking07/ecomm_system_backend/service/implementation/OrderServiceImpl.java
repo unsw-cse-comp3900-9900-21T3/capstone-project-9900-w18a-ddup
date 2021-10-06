@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
-    private final static String PRODUCT_AMOUNT = "product.amount.";
     private final static String ORDER_NUMBER = "order.number.";
 
     private final ProductRepository productRepository;
@@ -63,23 +62,17 @@ public class OrderServiceImpl implements OrderService {
         List<OrderVM.OrderProductsVM> productsVMS = new ArrayList<>();
         BigDecimal totalPrice = new BigDecimal(0);
         for (OrderDTO.OrderProductsDTO v : orderDTO.getProducts()) {
-            // StringRedisTemplate
-            Long amount = productService.getProductAmountFromCache(v.getProductId());
-            if (amount == null) {
-                amount = v.getAmount();
-                productService.setProductAmountToCache(v.getProductId(), amount);
-            }
-            if (amount < v.getAmount()) {
+            ProductVM product = productService.queryProduct(v.getProductId());
+            if (product.getAmount() < v.getAmount()) {
                 log.info("Product [{}] is not enough", v.getProductId());
                 throw new RuntimeException("Product is not enough");
             }
-            redisTemplate.opsForValue().decrement(PRODUCT_AMOUNT + v.getProductId(), v.getAmount());
-            ProductVM product = productService.queryProduct(v.getProductId());
+            productService.decreaseProductAmountInCache(v.getProductId(), v.getAmount());
             if (v.getDiscount()) {
                 // calculate discount price
-                totalPrice = totalPrice.add(product.getDiscountPrice());
+                totalPrice = totalPrice.add(product.getDiscountPrice().multiply(new BigDecimal(v.getAmount())));
             } else {
-                totalPrice = totalPrice.add(product.getPrice());
+                totalPrice = totalPrice.add(product.getPrice().multiply(new BigDecimal(v.getAmount())));
             }
             OrderVM.OrderProductsVM build = OrderVM.OrderProductsVM.builder()
                     .amount(v.getAmount())

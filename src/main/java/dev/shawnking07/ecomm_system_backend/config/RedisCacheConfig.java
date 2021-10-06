@@ -1,13 +1,12 @@
 package dev.shawnking07.ecomm_system_backend.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 
 import java.time.Duration;
@@ -15,11 +14,10 @@ import java.time.Duration;
 @Configuration
 @EnableCaching
 public class RedisCacheConfig {
-    private final Jackson2JsonRedisSerializer<Object> serializer;
+    private final GenericJackson2JsonRedisSerializer serializer;
 
-    public RedisCacheConfig(ObjectMapper objectMapper) {
-        this.serializer = new Jackson2JsonRedisSerializer<>(Object.class);
-        serializer.setObjectMapper(objectMapper);
+    public RedisCacheConfig() {
+        this.serializer = new GenericJackson2JsonRedisSerializer();
     }
 
     @Bean

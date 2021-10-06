@@ -43,6 +43,13 @@ public interface ProductService {
 
     Long getProductAmountFromCache(Long id, Long amount);
 
+    Long decreaseProductAmountInCache(Long id, long delta);
+
+    /**
+     * Schedule job for correct the product amount if some orders are expired
+     */
+    void correctProductAmountInCache();
+
     ProductVM product2ProductVM(Product product);
 
     /**
