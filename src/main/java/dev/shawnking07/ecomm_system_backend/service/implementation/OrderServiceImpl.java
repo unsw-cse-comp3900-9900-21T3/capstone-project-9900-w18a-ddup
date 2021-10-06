@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
-    private final static String productAmountKey = "product.amount.";
-    private final static String orderNumberKey = "order.number.";
+    private final static String PRODUCT_AMOUNT = "product.amount.";
+    private final static String ORDER_NUMBER = "order.number.";
 
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
@@ -66,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
                 log.info("Product [{}] is not enough", v.getProductId());
                 throw new RuntimeException("Product is not enough");
             }
-            redisTemplate.opsForValue().decrement(productAmountKey + v.getProductId(), v.getAmount());
+            redisTemplate.opsForValue().decrement(PRODUCT_AMOUNT + v.getProductId(), v.getAmount());
             ProductVM product = productService.queryProduct(v.getProductId());
             if (v.getDiscount()) {
                 // calculate discount price
@@ -84,8 +84,11 @@ public class OrderServiceImpl implements OrderService {
         OrderDTO orderWithPrice = orderDTO.toBuilder().totalPrice(totalPrice).build();
 
         String uuid = UUID.randomUUID().toString();
-        redisTemplate.opsForHash().put(orderNumberKey + uuid, "order", orderWithPrice);
-        redisTemplate.opsForHash().put(orderNumberKey + uuid, "buyer", SecurityUtils.getCurrentUserLogin().orElse(""));
+        // cache orderDTO for confirm and set expire time
+        redisTemplate.opsForHash().put(ORDER_NUMBER + uuid, "order", orderWithPrice);
+        redisTemplate.opsForHash().put(ORDER_NUMBER + uuid, "buyer", SecurityUtils.getCurrentUserLogin().orElse(""));
+        redisTemplate.expire(ORDER_NUMBER + uuid, properties.getOrderExpire());
+
         String s = Optional.ofNullable(orderDTO.getPayerUsername()).orElse(SecurityUtils.getCurrentUserLogin().orElse(""));
         return OrderVM.builder()
                 .orderNumber(uuid)
@@ -100,8 +103,8 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void confirmOrder(String orderNumber) {
-        OrderDTO orderDTO = (OrderDTO) redisTemplate.opsForHash().get(orderNumberKey + orderNumber, "order");
-        String buyerUsername = (String) redisTemplate.opsForHash().get(orderNumberKey + orderNumber, "buyer");
+        OrderDTO orderDTO = (OrderDTO) redisTemplate.opsForHash().get(ORDER_NUMBER + orderNumber, "order");
+        String buyerUsername = (String) redisTemplate.opsForHash().get(ORDER_NUMBER + orderNumber, "buyer");
 
         if (orderDTO == null) throw new ResourceNotFoundException("orderNumber is wrong");
         Order order = modelMapper.map(orderDTO, Order.class);
@@ -126,7 +129,7 @@ public class OrderServiceImpl implements OrderService {
         userRepository.save(buyer);
         userRepository.save(payer);
 
-        redisTemplate.delete(orderNumberKey + orderNumber);
+        redisTemplate.delete(ORDER_NUMBER + orderNumber);
         orderRepository.save(order);
     }
 

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-    private final static String productAmountKey = "product.amount.";
+    private final static String PRODUCT_AMOUNT = "product.amount.";
 
     private final ProductRepository productRepository;
     private final TagService tagService;
@@ -67,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
         List<DbFile> images = multipartFile2DbFile(productDTO.getFiles());
         product.setImages(images);
         productRepository.save(product);
-        redisTemplate.opsForValue().set(productAmountKey + product.getId(), String.valueOf(product.getAmount()));
+        redisTemplate.opsForValue().set(PRODUCT_AMOUNT + product.getId(), String.valueOf(product.getAmount()));
         return product2ProductVM(product);
     }
 
@@ -81,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
         modelMapper.map(productDTO, product);
         product.setImages(multipartFile2DbFile(productDTO.getFiles()));
         productRepository.save(product);
-        redisTemplate.opsForValue().set(productAmountKey + product.getId(), String.valueOf(product.getAmount()));
+        redisTemplate.opsForValue().set(PRODUCT_AMOUNT + product.getId(), String.valueOf(product.getAmount()));
         return product2ProductVM(product);
     }
 
@@ -90,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
-        redisTemplate.delete(productAmountKey + id);
+        redisTemplate.delete(PRODUCT_AMOUNT + id);
     }
 
     @Transactional
@@ -103,12 +103,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void setProductAmountToCache(Long id, Long amount) {
-        redisTemplate.opsForValue().set(productAmountKey + id, String.valueOf(amount));
+        redisTemplate.opsForValue().set(PRODUCT_AMOUNT + id, String.valueOf(amount));
     }
 
     @Override
     public Long getProductAmountFromCache(Long id) {
-        String s = redisTemplate.opsForValue().get(productAmountKey + id);
+        String s = redisTemplate.opsForValue().get(PRODUCT_AMOUNT + id);
         if (s == null) return null;
         return Long.parseLong(s);
     }

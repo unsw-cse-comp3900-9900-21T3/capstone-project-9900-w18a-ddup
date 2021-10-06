@@ -16,4 +16,6 @@ e-comm:
     token-validity: 3d
     token-validity-for-remember-me: 30d
 logging:
-  level: warn
+  level:
+    web: info
+    sql: warn

@@ -20,8 +20,8 @@ import java.util.Optional;
 
 @Service
 public class DbFileServiceImpl implements DbFileService {
-    private final static String baseLinkKey = "file.link.";
-    private final static String baseIdKey = "file.id.";
+    private final static String BASE_LINK_KEY = "file.link.";
+    private final static String BASE_ID_KEY = "file.id.";
     private final StringRedisTemplate redisTemplate;
     private final DbFileRepository dbFileRepository;
     private final ApplicationProperties properties;
@@ -34,11 +34,11 @@ public class DbFileServiceImpl implements DbFileService {
 
     @Override
     public String generateDownloadLink(Long id) {
-        String link = redisTemplate.opsForValue().get(baseIdKey + id);
+        String link = redisTemplate.opsForValue().get(BASE_ID_KEY + id);
         if (StringUtils.isNotBlank(link)) return link;
         String s = RandomStringUtils.randomAlphanumeric(10);
-        redisTemplate.opsForValue().set(baseLinkKey + s, String.valueOf(id), properties.getDownloadLinkExpire());
-        redisTemplate.opsForValue().set(baseIdKey + id, s, properties.getDownloadLinkExpire());
+        redisTemplate.opsForValue().set(BASE_LINK_KEY + s, String.valueOf(id), properties.getDownloadLinkExpire());
+        redisTemplate.opsForValue().set(BASE_ID_KEY + id, s, properties.getDownloadLinkExpire());
         return "/files/" + s;
     }
 
@@ -49,15 +49,15 @@ public class DbFileServiceImpl implements DbFileService {
 
     @Override
     public ResponseEntity<InputStreamResource> downloadFile(String link) {
-        String id = redisTemplate.opsForValue().get(baseLinkKey + link);
+        String id = redisTemplate.opsForValue().get(BASE_LINK_KEY + link);
         if (id == null) {
-            redisTemplate.delete(baseLinkKey + link);
+            redisTemplate.delete(BASE_LINK_KEY + link);
             throw new ResourceNotFoundException("wrong link");
         }
         Optional<DbFile> byId = dbFileRepository.findById(Long.valueOf(id));
         if (byId.isEmpty()) {
-            redisTemplate.delete(baseLinkKey + link);
-            redisTemplate.delete(baseIdKey + id);
+            redisTemplate.delete(BASE_LINK_KEY + link);
+            redisTemplate.delete(BASE_ID_KEY + id);
             throw new ResourceNotFoundException("wrong link");
         }
         DbFile dbFile = byId.get();
