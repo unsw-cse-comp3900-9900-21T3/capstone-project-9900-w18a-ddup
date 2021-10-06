@@ -1,0 +1,11 @@
+Work Diary
+
+Week 1
+The main task of the first week is to find teammates to form a group with 5 members to complete the project required by COMP9900. After group formed, we had out first meeting to get to know each other. And then we decided our project topic which is E-commerce Recommendation System. 
+
+
+Week 2
+This week we discussed some basic functions that need to be implemented in our e-commerce recommendation system project, as well as two novel functions. In addition, we have also arranged a fixed weekly meeting time as required (Actually, we would arrange more since we found one meeting is obviously not enough).
+
+
+Week 3
