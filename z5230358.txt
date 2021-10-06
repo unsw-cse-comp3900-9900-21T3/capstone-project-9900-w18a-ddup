@@ -9,3 +9,4 @@ This week we discussed some basic functions that need to be implemented in our e
 
 
 Week 3
+This week we wrote some drafts of user stories in Jira based on the features determined last week. Then for peoposal part, we assigned tasks to every group member, and everyone wrote a part of the proposal according to their own tasks. Finally, we integrated the proposal into a complete part And we start. In addition, we started the initial back-end and front-end development part for the first demo.
