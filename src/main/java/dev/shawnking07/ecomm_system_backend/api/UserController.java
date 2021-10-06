@@ -37,7 +37,7 @@ public class UserController {
         userService.editCurrentUser(userDTO);
     }
 
-    @Operation(summary = "Get current user's info")
+    @Operation(summary = "Get current user's info", description = "Username cannot be changed currently, each user has a unique ID")
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping

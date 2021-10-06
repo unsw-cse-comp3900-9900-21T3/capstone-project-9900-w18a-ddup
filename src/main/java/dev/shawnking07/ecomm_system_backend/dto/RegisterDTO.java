@@ -27,7 +27,9 @@ public class RegisterDTO {
     @Size(min = 4, max = 100)
     @Schema(example = "example passwd")
     private String password;
+    @Schema(example = "Sydney NSW 2052, Australia")
     private String address;
+    @Schema(example = "2052")
     private String postcode;
     @Builder.Default
     private UserType userType = UserType.USER;
