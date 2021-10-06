@@ -5,11 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.LazyGroup;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -18,6 +17,8 @@ import javax.persistence.Lob;
 @ToString(callSuper = true)
 public class DbFile extends BaseEntity {
     @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @LazyGroup("file_content")
     @JsonIgnore
     @Column(length = 20971520)
     @Type(type = "org.hibernate.type.RowVersionType")

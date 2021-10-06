@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 @Jacksonized
-@Builder
+@Builder(toBuilder = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class ProductVM {

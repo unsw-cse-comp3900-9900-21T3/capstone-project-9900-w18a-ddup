@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.io.ByteArrayInputStream;
@@ -47,6 +48,7 @@ public class DbFileServiceImpl implements DbFileService {
         return generateDownloadLink(dbFile.getId());
     }
 
+    @Transactional
     @Override
     public ResponseEntity<InputStreamResource> downloadFile(String link) {
         String id = redisTemplate.opsForValue().get(BASE_LINK_KEY + link);

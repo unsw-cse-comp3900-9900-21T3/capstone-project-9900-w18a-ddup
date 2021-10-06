@@ -40,7 +40,14 @@ public class OrderServiceImpl implements OrderService {
     private final ApplicationProperties properties;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public OrderServiceImpl(ProductRepository productRepository, OrderRepository orderRepository, ModelMapper modelMapper, ProductService productService, UserRepository userRepository, ApplicationProperties properties, RedisTemplate<String, Object> redisTemplate) {
+    public OrderServiceImpl(ProductRepository productRepository,
+                            OrderRepository orderRepository,
+                            ModelMapper modelMapper,
+                            ProductService productService,
+                            UserRepository userRepository,
+                            ApplicationProperties properties,
+                            RedisTemplate<String, Object> redisTemplate
+    ) {
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.modelMapper = modelMapper;

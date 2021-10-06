@@ -9,10 +9,11 @@ import dev.shawnking07.ecomm_system_backend.repository.ProductRepository;
 import dev.shawnking07.ecomm_system_backend.service.DbFileService;
 import dev.shawnking07.ecomm_system_backend.service.ProductService;
 import dev.shawnking07.ecomm_system_backend.service.TagService;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,9 +32,14 @@ public class ProductServiceImpl implements ProductService {
     private final TagService tagService;
     private final ModelMapper modelMapper;
     private final DbFileService dbFileService;
-    private final StringRedisTemplate redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    public ProductServiceImpl(ProductRepository productRepository, TagService tagService, ModelMapper modelMapper, DbFileService dbFileService, StringRedisTemplate redisTemplate) {
+    public ProductServiceImpl(ProductRepository productRepository,
+                              TagService tagService,
+                              ModelMapper modelMapper,
+                              DbFileService dbFileService,
+                              RedisTemplate<String, Object> redisTemplate
+    ) {
         this.productRepository = productRepository;
         this.tagService = tagService;
         this.modelMapper = modelMapper;
@@ -56,7 +62,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Transactional
-//    @CacheEvict(cacheNames = "products", allEntries = true)
     @Override
     public ProductVM addProduct(ProductDTO productDTO) {
         Product product = modelMapper.map(productDTO, Product.class);
@@ -75,9 +80,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public ProductVM editProduct(Long id, ProductDTO productDTO) {
-        Optional<Product> byId = productRepository.findById(id);
-        if (byId.isEmpty()) throw new ResourceNotFoundException("id dose not exist");
-        var product = byId.get();
+        Product product = getProduct(id);
         modelMapper.map(productDTO, product);
         product.setImages(multipartFile2DbFile(productDTO.getFiles()));
         productRepository.save(product);
@@ -85,7 +88,13 @@ public class ProductServiceImpl implements ProductService {
         return product2ProductVM(product);
     }
 
-    //    @CacheEvict(cacheNames = "products", allEntries = true)
+
+    public Product getProduct(Long id) {
+        Optional<Product> byId = productRepository.findById(id);
+        if (byId.isEmpty()) throw new ResourceNotFoundException("id dose not exist");
+        return byId.get();
+    }
+
     @Transactional
     @Override
     public void deleteProduct(Long id) {
@@ -96,9 +105,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public ProductVM queryProduct(Long id) {
-        Optional<Product> byId = productRepository.findById(id);
-        if (byId.isEmpty()) throw new ResourceNotFoundException("id does not exist");
-        return product2ProductVM(byId.get());
+        return product2ProductVM(getProduct(id));
     }
 
     @Override
@@ -108,21 +115,28 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Long getProductAmountFromCache(Long id) {
-        String s = redisTemplate.opsForValue().get(PRODUCT_AMOUNT + id);
-        if (s == null) return null;
+        String s = (String) redisTemplate.opsForValue().get(PRODUCT_AMOUNT + id);
+        if (!NumberUtils.isParsable(s)) return null;
         return Long.parseLong(s);
+    }
+
+    @Override
+    public Long getProductAmountFromCache(Long id, Long amount) {
+        Long amount1 = getProductAmountFromCache(id);
+        if (amount1 == null) {
+            amount1 = amount;
+            setProductAmountToCache(id, amount);
+        }
+        return amount1;
     }
 
     @Transactional
     @Override
     public ProductVM product2ProductVM(Product product) {
-        Long amount = getProductAmountFromCache(product.getId());
-        if (amount == null) {
-            amount = product.getAmount();
-            setProductAmountToCache(product.getId(), amount);
-        }
+        Long amount = getProductAmountFromCache(product.getId(), product.getAmount());
         var ppMap = modelMapper.typeMap(Product.class, ProductVM.ProductVMBuilder.class)
                 .addMappings(mapping -> mapping.skip(ProductVM.ProductVMBuilder::tags));
+
         return ppMap.map(product)
                 .tags(product.getTags().stream().map(tagService::tag2String).collect(Collectors.toSet()))
                 .amount(amount)
@@ -130,7 +144,6 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
-    //    @Cacheable(cacheNames = "products")
     @Transactional
     @Override
     public List<ProductVM> listProducts() {

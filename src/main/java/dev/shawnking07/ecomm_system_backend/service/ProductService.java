@@ -41,6 +41,8 @@ public interface ProductService {
     @Nullable
     Long getProductAmountFromCache(Long id);
 
+    Long getProductAmountFromCache(Long id, Long amount);
+
     ProductVM product2ProductVM(Product product);
 
     /**

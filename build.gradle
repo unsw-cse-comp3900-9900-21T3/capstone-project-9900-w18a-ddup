@@ -1,3 +1,13 @@
+buildscript {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.hibernate:hibernate-gradle-plugin:5.4.32.Final'
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.5.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -7,6 +17,9 @@ plugins {
     id "org.springdoc.openapi-gradle-plugin" version "1.3.3"
     id 'com.google.cloud.tools.jib' version '3.1.4'
 }
+
+apply plugin: 'org.hibernate.orm'
+
 
 group = 'dev.shawnking07'
 version = '0.0.1-SNAPSHOT'
@@ -56,6 +69,15 @@ dependencies {
     testImplementation 'it.ozimov:embedded-redis:0.7.3'
 }
 
+hibernate {
+    enhance {
+        enableLazyInitialization = true
+        enableDirtyTracking = true
+        enableAssociationManagement = true
+        enableExtendedEnhancement = false
+    }
+}
+
 openApi {
     apiDocsUrl.set("http://localhost:8080/api-docs")
 }
@@ -68,7 +90,7 @@ test {
 jib {
     to.image = "w18a-ddup-ecomm"
     from.image = "gcr.io/distroless/java"
-    container{
+    container {
         creationTime = "USE_CURRENT_TIMESTAMP"
         jvmFlags = ["-Dspring.profiles.active=prod"]
     }
