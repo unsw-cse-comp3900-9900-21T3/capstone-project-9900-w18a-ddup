@@ -76,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
             }
             OrderVM.OrderProductsVM build = OrderVM.OrderProductsVM.builder()
                     .amount(v.getAmount())
-                    .product(product)
+                    .product(product.toBuilder().amount(product.getAmount() - v.getAmount()).build())
                     .build();
             productsVMS.add(build);
         }

@@ -7,8 +7,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -16,10 +18,10 @@ import java.util.Collection;
 @NoArgsConstructor
 @ToString(callSuper = true)
 public class Tag extends BaseEntity {
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     @ToString.Exclude
     @JsonIgnore
-    private Collection<Product> products;
+    private Set<Product> products = new HashSet<>();
 
     private String name;
 

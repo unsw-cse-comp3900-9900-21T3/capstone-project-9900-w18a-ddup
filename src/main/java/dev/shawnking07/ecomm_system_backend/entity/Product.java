@@ -8,6 +8,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -26,7 +27,7 @@ public class Product extends BaseEntity {
     @ToString.Exclude
     private Collection<DbFile> images;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "products_tags",
             joinColumns = @JoinColumn(
@@ -34,5 +35,5 @@ public class Product extends BaseEntity {
             inverseJoinColumns = @JoinColumn(
                     name = "tag_id", referencedColumnName = "id"))
     @ToString.Exclude
-    private Set<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 }

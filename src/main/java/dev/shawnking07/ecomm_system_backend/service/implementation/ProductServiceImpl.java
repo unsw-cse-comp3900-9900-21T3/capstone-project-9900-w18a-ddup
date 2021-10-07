@@ -6,7 +6,9 @@ import dev.shawnking07.ecomm_system_backend.dto.ProductDTO;
 import dev.shawnking07.ecomm_system_backend.dto.ProductVM;
 import dev.shawnking07.ecomm_system_backend.entity.DbFile;
 import dev.shawnking07.ecomm_system_backend.entity.Product;
+import dev.shawnking07.ecomm_system_backend.entity.Tag;
 import dev.shawnking07.ecomm_system_backend.repository.ProductRepository;
+import dev.shawnking07.ecomm_system_backend.repository.TagRepository;
 import dev.shawnking07.ecomm_system_backend.service.DbFileService;
 import dev.shawnking07.ecomm_system_backend.service.ProductService;
 import dev.shawnking07.ecomm_system_backend.service.TagService;
@@ -35,6 +37,7 @@ public class ProductServiceImpl implements ProductService {
     private final static String ORDER_NUMBER = "order.number.";
 
     private final ProductRepository productRepository;
+    private final TagRepository tagRepository;
     private final TagService tagService;
     private final ModelMapper modelMapper;
     private final DbFileService dbFileService;
@@ -43,11 +46,12 @@ public class ProductServiceImpl implements ProductService {
     private RedisTemplate<String, Object> redisTemplate;
 
     public ProductServiceImpl(ProductRepository productRepository,
-                              TagService tagService,
+                              TagRepository tagRepository, TagService tagService,
                               ModelMapper modelMapper,
                               DbFileService dbFileService,
                               StringRedisTemplate stringRedisTemplate) {
         this.productRepository = productRepository;
+        this.tagRepository = tagRepository;
         this.tagService = tagService;
         this.modelMapper = modelMapper;
         this.dbFileService = dbFileService;
@@ -71,10 +75,16 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public ProductVM addProduct(ProductDTO productDTO) {
-        Product product = modelMapper.map(productDTO, Product.class);
+        var ppMap = modelMapper.typeMap(ProductDTO.class, Product.class).addMappings(mapping -> mapping.skip(Product::setTags));
+        Product product = ppMap.map(productDTO);
         Set<String> tags = productDTO.getTags();
 
-        product.setTags(tags.stream().map(tagService::string2Tag).collect(Collectors.toSet()));
+        Set<Tag> collect = tags.stream().map(v -> {
+            Tag tag = tagService.string2Tag(v);
+            tag.getProducts().add(product);
+            return tag;
+        }).collect(Collectors.toSet());
+        product.setTags(collect);
 
         List<DbFile> images = multipartFile2DbFile(productDTO.getFiles());
         product.setImages(images);
@@ -83,7 +93,6 @@ public class ProductServiceImpl implements ProductService {
         return product2ProductVM(product);
     }
 
-    //    @CacheEvict(cacheNames = "products", allEntries = true)
     @Transactional
     @Override
     public ProductVM editProduct(Long id, ProductDTO productDTO) {
