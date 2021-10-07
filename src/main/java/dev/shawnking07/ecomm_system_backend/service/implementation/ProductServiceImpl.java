@@ -77,14 +77,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductVM addProduct(ProductDTO productDTO) {
         var ppMap = modelMapper.typeMap(ProductDTO.class, Product.class).addMappings(mapping -> mapping.skip(Product::setTags));
         Product product = ppMap.map(productDTO);
-        Set<String> tags = productDTO.getTags();
-
-        Set<Tag> collect = tags.stream().map(v -> {
-            Tag tag = tagService.string2Tag(v);
-            tag.getProducts().add(product);
-            return tag;
-        }).collect(Collectors.toSet());
-        product.setTags(collect);
+        product.setTags(getTags(productDTO, product));
 
         List<DbFile> images = multipartFile2DbFile(productDTO.getFiles());
         product.setImages(images);
@@ -93,12 +86,23 @@ public class ProductServiceImpl implements ProductService {
         return product2ProductVM(product);
     }
 
+    private Set<Tag> getTags(ProductDTO productDTO, Product product) {
+        Set<String> tags = productDTO.getTags();
+        return tags.stream().map(v -> {
+            Tag tag = tagService.string2Tag(v);
+            tag.getProducts().add(product);
+            return tag;
+        }).collect(Collectors.toSet());
+    }
+
     @Transactional
     @Override
     public ProductVM editProduct(Long id, ProductDTO productDTO) {
         Product product = getProduct(id);
-        modelMapper.map(productDTO, product);
+        var ppMap = modelMapper.typeMap(ProductDTO.class, Product.class).addMappings(mapping -> mapping.skip(Product::setTags));
+        ppMap.map(productDTO, product);
         product.setImages(multipartFile2DbFile(productDTO.getFiles()));
+        product.setTags(getTags(productDTO, product));
         productRepository.save(product);
         stringRedisTemplate.opsForValue().set(PRODUCT_AMOUNT + product.getId(), String.valueOf(product.getAmount()));
         return product2ProductVM(product);
