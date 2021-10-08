@@ -6,3 +6,7 @@ We discussed about the user story, and split work into parts.
 
 Week 3
 I draw the ER diagram, system architecture diagram and initiated the backend code. Working on the technical part of the proposal.
+
+Week 4
+I finished the backend part of Sprint 1. Finish the home page sign-in and sign-up function for both user and admin. User and account system. Starting develop on other modules.
+I applied a CI system for auto test backend code and deploy API docs and system to my server https://ecomm.shawnking07.dev/swagger-ui.html
