@@ -1,13 +1,23 @@
 import {
-    SET_USER_AUTHORITY,
-    CLEAR_USER_AUTHORITY
-} from "./constants"
+    SET_USER_IDInfo,
+    CLEAR_USER_IDInfo,
+} from "./constants";
 
-export const setUserAuthorityAction = (obj) => ({
-    type: SET_USER_AUTHORITY,
-    userAuthority: obj
+import { getUserInfo } from "@/services/user"
+
+export const setUserIDInfoAction = obj => ({
+    type: SET_USER_IDInfo,
+    userIDInfo: obj
 })
 
-export const clearUserAuthorityAction = () => ({
-    type: CLEAR_USER_AUTHORITY
+export const clearUserIDInfoAction = () => ({
+    type: CLEAR_USER_IDInfo
 })
+
+export const getUserInfoAction = token => (
+    dispatch => {
+        getUserInfo(token).then( res => {
+            dispatch(setUserIDInfoAction(res.data))
+        })
+    }
+)

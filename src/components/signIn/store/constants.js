@@ -1,2 +1,3 @@
-export const SET_USER_AUTHORITY = 'SET_USER_AUTHORITY'
-export const CLEAR_USER_AUTHORITY = 'CLEAR_USER_AUTHORITY'
+export const SET_USER_IDInfo = 'SET_USER_IDInfo'
+export const CLEAR_USER_IDInfo = 'CLEAR_USER_IDInfo'
+// export const GET_USER_INFO = 'GET_USER_INFO' 

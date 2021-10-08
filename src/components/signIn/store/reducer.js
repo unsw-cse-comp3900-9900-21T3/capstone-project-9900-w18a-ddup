@@ -1,18 +1,19 @@
 import {
-    SET_USER_AUTHORITY,
-    CLEAR_USER_AUTHORITY,
+    SET_USER_IDInfo,
+    CLEAR_USER_IDInfo,
 } from "./constants"
 
 const defaultState = {
-    userAuthority: {}
+    UserIDInfo: {}
 }
 
 function reducer(state=defaultState, action) {
     switch(action.type) {
-        case SET_USER_AUTHORITY:
-            return {...state, userAuthority: action.userAuthority}
-       case CLEAR_USER_AUTHORITY:
-           return {userAuthority: {}}
+        case SET_USER_IDInfo:
+            const tem = {...state.UserIDInfo, ...action.userIDInfo}
+            return {UserIDInfo: tem}
+       case CLEAR_USER_IDInfo:
+           return {UserIDInfo: {}}
         default:
             return state
     }

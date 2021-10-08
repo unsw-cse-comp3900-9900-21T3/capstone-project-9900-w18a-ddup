@@ -31,3 +31,5 @@ export const adminAvatarMenu = [
         key: 'logout'
     }
 ]
+
+export const adminArr = ['admin@test.com']

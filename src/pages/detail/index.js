@@ -1,9 +1,9 @@
 import React, { memo } from "react";
 
-function Detail() {
+function Detail({match}) {
     return (
         <div>
-            Detail
+            Detail {match.params.id}
         </div>
     )
 }

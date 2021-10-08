@@ -19,8 +19,8 @@ function AppHeader(props) {
     const [signInVisible, setSignInVisible] = useState(false)
     const [signUpVisible, setSignUpVisible] = useState(false)
 
-    const { userAuthority } = useSelector(state => ({
-        userAuthority: state.User.userAuthority
+    const { userIDInfo={} } = useSelector(state => ({
+        userIDInfo: state.User.UserIDInfo
     }), shallowEqual)
 
     return (
@@ -33,7 +33,7 @@ function AppHeader(props) {
                 <h1> DDUP shopping </h1>
             </div>
 
-            {userAuthority.username ?
+            {userIDInfo.username ?
                 <Avatar/>
                 :
                 <div className='header-right'>
@@ -67,7 +67,7 @@ function AppHeader(props) {
                 onCancel={() => { setSignUpVisible(false) }}
                 footer={null}
             >
-                <SignUp />
+                <SignUp signUpCancel={() => {setSignUpVisible(false)}}/>
             </Modal>
         </AppHeaderWrapper>
     )

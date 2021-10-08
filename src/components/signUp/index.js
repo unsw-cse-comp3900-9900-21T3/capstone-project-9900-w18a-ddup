@@ -1,17 +1,30 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
+import { Form, Input, Button, message } from "antd";
 
-import { Form, Input, Button } from "antd"
+import { userRegister } from "@/services/user"
 
-function SignUp() {
+
+function SignUp({ signUpCancel }) {
+    const [loading, setLoading] = useState(false)
 
     const onFinish = (values) => {
-        console.log('Success:', values);
+        setLoading(true)
+        userRegister({ ...values, firstname: values.username }).then(() => {
+            message.success('register success!', 1, () => {
+                setLoading(false)
+                signUpCancel()
+            })
+        }).catch(err => {
+            message.error(err.response.data.detail, 1, () => {
+                setLoading(false)
+            })
+        })
     };
 
     return (
         <div>
             <Form
-                name='signIn'
+                name='signUp'
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 24 }}
                 onFinish={onFinish}
@@ -30,8 +43,8 @@ function SignUp() {
                 </Form.Item>
 
                 <Form.Item
-                    name="email"
                     label="E-mail"
+                    name="address"
                     rules={[
                         {
                             type: 'email',
@@ -47,8 +60,8 @@ function SignUp() {
                 </Form.Item>
 
                 <Form.Item
-                    name="phone"
                     label="Phone Number"
+                    name="phone"
                     rules={[
                         {
                             required: true,
@@ -78,7 +91,7 @@ function SignUp() {
                         span: 16,
                     }}
                 >
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={loading}>
                         Submit
                     </Button>
                 </Form.Item>

@@ -22,7 +22,7 @@ function Main(props) {
     }
 
     function inputPressEnter() {
-        history.push('/main/search')
+        history.push('/main/search', {keyWord: searchValue})
     }
 
     return (

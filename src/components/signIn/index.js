@@ -1,13 +1,15 @@
-import React, { memo, useState} from "react";
+import React, { memo, useState } from "react";
 import { useDispatch } from "react-redux";
+import { Form, Input, Button, message } from "antd";
 
-import { setUserAuthorityAction } from "./store/actionCreators"
-import { Form, Input, Button } from "antd";
+import { setUserIDInfoAction } from "./store/actionCreators"
 import ResetPassword from "@/components/reset-password";
+import { userLogin } from "@/services/user"
 
-function SignIn( {signInCancel} ) {
+function SignIn({ signInCancel }) {
     // 组件自己的状态
     const [resetVisiable, setResetVisible] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     // redux相关
     const dispatch = useDispatch()
@@ -17,8 +19,19 @@ function SignIn( {signInCancel} ) {
     //业务逻辑
 
     const onFinish = (values) => {
-        dispatch(setUserAuthorityAction(values))
-        signInCancel()
+        setLoading(true)
+        userLogin(values).then(res => {
+            message.success('login success', 1, () => {
+                dispatch(setUserIDInfoAction({...values, token: res.data.id_token}))
+                setLoading(false)
+                signInCancel()
+            })
+        }).catch(err => {
+            message.error(err.response.data.detail, 1, () => {
+                setLoading(false)
+            })
+        })
+
     };
 
     function resetCancel() {
@@ -60,18 +73,19 @@ function SignIn( {signInCancel} ) {
                 </Form.Item>
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" style={{
+                    <Button type="primary" loading={loading} htmlType="submit" style={{
                         margin: '0 100px',
                     }}>
                         Submit
                     </Button>
 
-                    <Button 
-                        type="primary" 
+                    <Button
+                        disabled
+                        type="primary"
                         style={{
                             margin: '0 50px',
                         }}
-                        onClick={()=>{setResetVisible(!resetVisiable)}}
+                        onClick={() => { setResetVisible(!resetVisiable) }}
                     >
                         Froget
                     </Button>

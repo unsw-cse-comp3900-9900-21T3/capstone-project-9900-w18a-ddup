@@ -1,9 +1,9 @@
 import React, { memo } from "react";
 
-function Search() {
+function Search({location}) {
     return (
         <div>
-            Search
+            Search {location.state.keyWord}
         </div>
     )
 }
