@@ -1,7 +1,8 @@
 import React, { memo } from "react";
+import { Carousel } from 'antd';
 
 import { ShowWrapper } from './style';
-import { Carousel } from 'antd';
+import ProductCard from "@/components/product-card"; 
 
 function Show() {
 
@@ -44,7 +45,8 @@ function Show() {
                     </Carousel>
                 </div>
             </div>
-            
+            <ProductCard/>
+            <ProductCard/>
         </ShowWrapper>
     )
 }

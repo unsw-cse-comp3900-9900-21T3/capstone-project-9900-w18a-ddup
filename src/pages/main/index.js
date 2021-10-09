@@ -1,15 +1,15 @@
-import React, { memo, useState } from "react"
-import { renderRoutes } from "react-router-config"
+import React, { memo, useState } from "react";
+import { renderRoutes } from "react-router-config";
+import {  Input  } from "antd";
+import  {
+    SearchOutlined 
+} from "@ant-design/icons";
 
-import {  Input  } from "antd"
 import {
     MainWrapper,
     MainHeaderWrapper,
     MainFooterWrapper
-} from "./style"
-import  {
-    SearchOutlined 
-} from "@ant-design/icons"
+} from "./style";
 
 function Main(props) {
     const history = props.history
