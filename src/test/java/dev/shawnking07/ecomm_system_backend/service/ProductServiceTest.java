@@ -3,6 +3,7 @@ package dev.shawnking07.ecomm_system_backend.service;
 import dev.shawnking07.ecomm_system_backend.ECommTestConfiguration;
 import dev.shawnking07.ecomm_system_backend.api.error.ResourceNotFoundException;
 import dev.shawnking07.ecomm_system_backend.dto.ProductDTO;
+import dev.shawnking07.ecomm_system_backend.dto.ProductPatchDTO;
 import dev.shawnking07.ecomm_system_backend.dto.ProductVM;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
@@ -51,12 +52,12 @@ class ProductServiceTest {
     @Transactional
     public void editProduct() {
         log.info("[edit product]");
-        ProductDTO edit = new ProductDTO();
+        var edit = new ProductPatchDTO();
         BeanUtils.copyProperties(productDTO, edit);
         edit.setPrice(new BigDecimal("450"));
         Set<String> tags = Set.of("Not Apple");
         edit.setTags(tags);
-        ProductVM productVM = productService.editProduct(id, edit);
+        ProductVM productVM = productService.patchProduct(id, edit);
 
         assertEquals(id, productVM.getId());
         assertEquals(new BigDecimal("450"), productVM.getPrice());

@@ -1,6 +1,7 @@
 package dev.shawnking07.ecomm_system_backend.api;
 
 import dev.shawnking07.ecomm_system_backend.dto.ProductDTO;
+import dev.shawnking07.ecomm_system_backend.dto.ProductPatchDTO;
 import dev.shawnking07.ecomm_system_backend.dto.ProductVM;
 import dev.shawnking07.ecomm_system_backend.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,9 +40,9 @@ public class ProductController {
     @Operation(summary = "Partial update product info")
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PatchMapping("/{id}")
-    public ProductVM editProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO productDTO) {
-        return productService.editProduct(id, productDTO);
+    @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ProductVM editProduct(@PathVariable Long id, @Valid ProductPatchDTO productPatchDTO) {
+        return productService.patchProduct(id, productPatchDTO);
     }
 
     @Operation(summary = "Delete product info")

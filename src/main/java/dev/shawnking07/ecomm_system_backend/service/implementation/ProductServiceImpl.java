@@ -3,6 +3,7 @@ package dev.shawnking07.ecomm_system_backend.service.implementation;
 import dev.shawnking07.ecomm_system_backend.api.error.ResourceNotFoundException;
 import dev.shawnking07.ecomm_system_backend.dto.OrderDTO;
 import dev.shawnking07.ecomm_system_backend.dto.ProductDTO;
+import dev.shawnking07.ecomm_system_backend.dto.ProductPatchDTO;
 import dev.shawnking07.ecomm_system_backend.dto.ProductVM;
 import dev.shawnking07.ecomm_system_backend.entity.DbFile;
 import dev.shawnking07.ecomm_system_backend.entity.Product;
@@ -97,8 +98,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public ProductVM editProduct(Long id, ProductDTO productDTO) {
+    public ProductVM patchProduct(Long id, ProductPatchDTO productPatchDTO) {
         Product product = getProduct(id);
+        ProductDTO productDTO = modelMapper.map(productPatchDTO, ProductDTO.class);
         var ppMap = modelMapper.typeMap(ProductDTO.class, Product.class).addMappings(mapping -> mapping.skip(Product::setTags));
         ppMap.map(productDTO, product);
         product.setImages(multipartFile2DbFile(productDTO.getFiles()));

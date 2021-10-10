@@ -1,6 +1,7 @@
 package dev.shawnking07.ecomm_system_backend.service;
 
 import dev.shawnking07.ecomm_system_backend.dto.ProductDTO;
+import dev.shawnking07.ecomm_system_backend.dto.ProductPatchDTO;
 import dev.shawnking07.ecomm_system_backend.dto.ProductVM;
 import dev.shawnking07.ecomm_system_backend.entity.Product;
 import org.springframework.data.domain.Page;
@@ -19,13 +20,13 @@ public interface ProductService {
     ProductVM addProduct(ProductDTO productDTO);
 
     /**
-     * edit a product
+     * patch a product
      *
-     * @param id         Product id
-     * @param productDTO product info
+     * @param id              Product id
+     * @param productPatchDTO info
      * @return edited product
      */
-    ProductVM editProduct(Long id, ProductDTO productDTO);
+    ProductVM patchProduct(Long id, ProductPatchDTO productPatchDTO);
 
     /**
      * delete a product
