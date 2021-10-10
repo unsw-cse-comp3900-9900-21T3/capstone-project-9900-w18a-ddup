@@ -36,7 +36,7 @@ public class DbFileServiceImpl implements DbFileService {
     @Override
     public String generateDownloadLink(Long id) {
         String link = redisTemplate.opsForValue().get(BASE_ID_KEY + id);
-        if (StringUtils.isNotBlank(link)) return link;
+        if (StringUtils.isNotBlank(link)) return "/files/" + link;
         String s = RandomStringUtils.randomAlphanumeric(10);
         redisTemplate.opsForValue().set(BASE_LINK_KEY + s, String.valueOf(id), properties.getDownloadLinkExpire());
         redisTemplate.opsForValue().set(BASE_ID_KEY + id, s, properties.getDownloadLinkExpire());
