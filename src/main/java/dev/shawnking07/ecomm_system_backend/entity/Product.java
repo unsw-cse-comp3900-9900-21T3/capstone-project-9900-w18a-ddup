@@ -7,8 +7,9 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,7 +26,7 @@ public class Product extends BaseEntity {
     private Long amount = 1L;
     @OneToMany(cascade = CascadeType.ALL)
     @ToString.Exclude
-    private Collection<DbFile> images;
+    private List<DbFile> images = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(

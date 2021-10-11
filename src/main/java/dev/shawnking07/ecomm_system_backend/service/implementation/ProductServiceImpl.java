@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Nullable;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.*;
@@ -60,7 +61,9 @@ public class ProductServiceImpl implements ProductService {
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
+    @Nullable
     private List<DbFile> multipartFile2DbFile(List<MultipartFile> files) {
+        if (files == null) return null;
         return files.stream().map(f -> {
             DbFile dbFile = new DbFile();
             dbFile.setFilename(f.getName());
@@ -79,17 +82,19 @@ public class ProductServiceImpl implements ProductService {
     public ProductVM addProduct(ProductDTO productDTO) {
         var ppMap = modelMapper.typeMap(ProductDTO.class, Product.class).addMappings(mapping -> mapping.skip(Product::setTags));
         Product product = ppMap.map(productDTO);
-        product.setTags(getTags(productDTO, product));
-
+        Set<Tag> tags = getTags(productDTO, product);
+        if (tags != null) product.setTags(tags);
         List<DbFile> images = multipartFile2DbFile(productDTO.getFiles());
-        product.setImages(images);
+        if (images != null) product.setImages(images);
         productRepository.save(product);
         stringRedisTemplate.opsForValue().set(PRODUCT_AMOUNT + product.getId(), String.valueOf(product.getAmount()));
         return product2ProductVM(product);
     }
 
+    @Nullable
     private Set<Tag> getTags(ProductDTO productDTO, Product product) {
         Set<String> tags = productDTO.getTags();
+        if (tags == null) return null;
         return tags.stream().map(v -> {
             Tag tag = tagService.string2Tag(v);
             tag.getProducts().add(product);
@@ -105,8 +110,10 @@ public class ProductServiceImpl implements ProductService {
         BeanUtils.copyProperties(productPatchDTO, productDTO);
         var ppMap = modelMapper.typeMap(ProductDTO.class, Product.class).addMappings(mapping -> mapping.skip(Product::setTags));
         ppMap.map(productDTO, product);
-        product.setImages(multipartFile2DbFile(productDTO.getFiles()));
-        product.setTags(getTags(productDTO, product));
+        List<DbFile> images = multipartFile2DbFile(productDTO.getFiles());
+        if (images != null) product.setImages(images);
+        Set<Tag> tags = getTags(productDTO, product);
+        if (tags != null) product.setTags(tags);
         productRepository.save(product);
         stringRedisTemplate.opsForValue().set(PRODUCT_AMOUNT + product.getId(), String.valueOf(product.getAmount()));
         return product2ProductVM(product);

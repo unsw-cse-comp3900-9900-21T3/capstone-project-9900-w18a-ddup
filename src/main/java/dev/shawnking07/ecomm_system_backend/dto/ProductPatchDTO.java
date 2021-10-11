@@ -10,8 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,6 +31,6 @@ public class ProductPatchDTO {
     @Positive
     private Long amount = 1L;
     @ArraySchema(uniqueItems = true, schema = @Schema(example = "Apple"))
-    private Set<String> tags = new HashSet<>();
-    private List<MultipartFile> files = new ArrayList<>();
+    private Set<String> tags;
+    private List<MultipartFile> files;
 }
