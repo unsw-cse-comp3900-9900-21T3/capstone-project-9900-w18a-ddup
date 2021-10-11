@@ -1,8 +1,4 @@
 buildscript {
-    repositories {
-        gradlePluginPortal()
-        mavenCentral()
-    }
     dependencies {
         classpath 'org.hibernate:hibernate-gradle-plugin:5.4.32.Final'
     }

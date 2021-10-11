@@ -120,7 +120,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+        productRepository.delete(productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id + " does not exist")));
         stringRedisTemplate.delete(PRODUCT_AMOUNT + id);
     }
 
