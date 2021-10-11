@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -100,7 +101,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductVM patchProduct(Long id, ProductPatchDTO productPatchDTO) {
         Product product = getProduct(id);
-        ProductDTO productDTO = modelMapper.map(productPatchDTO, ProductDTO.class);
+        ProductDTO productDTO = new ProductDTO();
+        BeanUtils.copyProperties(productPatchDTO, productDTO);
         var ppMap = modelMapper.typeMap(ProductDTO.class, Product.class).addMappings(mapping -> mapping.skip(Product::setTags));
         ppMap.map(productDTO, product);
         product.setImages(multipartFile2DbFile(productDTO.getFiles()));
