@@ -1,10 +1,13 @@
 import React, { memo } from "react";
 
+import { OrderWrapper } from "./style";
+
 function Order() {
+
     return (
-        <div>
-            Order
-        </div>
+        <OrderWrapper>
+            order
+        </OrderWrapper>
     )
 }
 

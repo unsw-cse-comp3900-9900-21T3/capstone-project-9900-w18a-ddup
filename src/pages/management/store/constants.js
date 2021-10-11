@@ -1,0 +1,1 @@
+export const GET_PRODUCTS_INFO = 'GET_PRODUCTS_INFO'

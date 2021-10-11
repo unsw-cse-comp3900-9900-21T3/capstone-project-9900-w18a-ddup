@@ -33,3 +33,9 @@ export const adminAvatarMenu = [
 ]
 
 export const adminArr = ['admin@test.com']
+
+export const imgBaseURL = 'https://ecomm.shawnking07.dev'
+
+export const itemsPerPageForAdmin = 8
+
+export const placeholderURL = '@/assets/img/placeholder.png'

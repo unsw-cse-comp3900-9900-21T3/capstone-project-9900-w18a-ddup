@@ -18,12 +18,12 @@ function Profile() {
         password: state.User.UserIDInfo.password,
     }), shallowEqual)
 
-    const from = useRef()
+    const form = useRef()
     useEffect(() => {
         dispatch(getUserInfoAction(token))
     }, [dispatch, token, address, password])
     useEffect(() => {
-        from.current.setFieldsValue({
+        form.current.setFieldsValue({
             address: address,
         })
     }, [address])
@@ -51,7 +51,7 @@ function Profile() {
                         labelCol={{ span: 8 }}
                         wrapperCol={{ span: 24 }}
                         onFinish={onFinish}
-                        ref={from}
+                        ref={form}
                     >
                         <Form.Item
                             label="Username"

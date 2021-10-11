@@ -6,10 +6,6 @@ import ProductCard from "@/components/product-card";
 
 function Show() {
 
-
-
-
-
     return (
         <ShowWrapper>
             <div className='carousels'>

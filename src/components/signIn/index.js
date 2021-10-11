@@ -27,7 +27,8 @@ function SignIn({ signInCancel }) {
                 signInCancel()
             })
         }).catch(err => {
-            message.error(err.response.data.detail, 1, () => {
+            // console.log('?', err.response)
+            message.error(err.response?.data.message, 1, () => {
                 setLoading(false)
             })
         })
