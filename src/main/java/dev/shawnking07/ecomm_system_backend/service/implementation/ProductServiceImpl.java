@@ -87,7 +87,7 @@ public class ProductServiceImpl implements ProductService {
         List<DbFile> images = multipartFile2DbFile(productDTO.getFiles());
         if (images != null) product.setImages(images);
         productRepository.save(product);
-        stringRedisTemplate.opsForValue().set(PRODUCT_AMOUNT + product.getId(), String.valueOf(product.getAmount()));
+        setProductAmountToCache(product.getId(), product.getAmount());
         return product2ProductVM(product);
     }
 
@@ -115,7 +115,7 @@ public class ProductServiceImpl implements ProductService {
         Set<Tag> tags = getTags(productDTO, product);
         if (tags != null) product.setTags(tags);
         productRepository.save(product);
-        stringRedisTemplate.opsForValue().set(PRODUCT_AMOUNT + product.getId(), String.valueOf(product.getAmount()));
+        setProductAmountToCache(product.getId(), product.getAmount());
         return product2ProductVM(product);
     }
 
@@ -198,6 +198,7 @@ public class ProductServiceImpl implements ProductService {
             Product product = byId.get();
             Long dbAmount = product.getAmount();
             if (cacheAmount + amountInOrders != dbAmount) {
+                log.info("[Product Amount] [{}] [origin: {}] -> [new: {}]", product.getName(), cacheAmount, dbAmount - amountInOrders);
                 setProductAmountToCache(v, dbAmount - amountInOrders);
             }
         });
