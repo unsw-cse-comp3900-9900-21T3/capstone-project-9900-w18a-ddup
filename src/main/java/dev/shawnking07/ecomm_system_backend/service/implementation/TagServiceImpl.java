@@ -16,27 +16,17 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void addTag(Tag tag) {
+    public void deleteTag(String name) {
 
-    }
-
-    @Override
-    public void editTag(Long id, Tag tag) {
-
-    }
-
-    @Override
-    public void deleteTag(Long id) {
-
-    }
-
-    @Override
-    public String queryTag(Long id) {
-        return null;
     }
 
     @Override
     public List<String> findAllTags() {
+        return null;
+    }
+
+    @Override
+    public List<Tag> findAllTagsWithProducts() {
         return null;
     }
 

@@ -67,6 +67,7 @@ public class DbFileServiceImpl implements DbFileService {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(HttpHeaders.CONTENT_TYPE, dbFile.getFiletype());
         httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=" + dbFile.getFilename());
+        httpHeaders.set(HttpHeaders.CACHE_CONTROL, "max-age=" + properties.getDownloadLinkExpire().toSeconds());
 
         return new ResponseEntity<>(
                 new InputStreamResource(new ByteArrayInputStream(dbFile.getContent())),

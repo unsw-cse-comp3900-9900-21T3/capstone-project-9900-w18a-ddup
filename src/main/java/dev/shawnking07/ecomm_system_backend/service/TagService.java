@@ -6,34 +6,11 @@ import java.util.List;
 
 public interface TagService {
     /**
-     * add a new tag
+     * delete a tag with its name
      *
-     * @param tag new tag
+     * @param name tag name
      */
-    void addTag(Tag tag);
-
-    /**
-     * patch a tag: update the properties if not null ( partial update )
-     *
-     * @param id  tag id
-     * @param tag new tag info
-     */
-    void editTag(Long id, Tag tag);
-
-    /**
-     * delete a tag with id
-     *
-     * @param id tag id
-     */
-    void deleteTag(Long id);
-
-    /**
-     * find a tag with its id. if not found, throw {@link dev.shawnking07.ecomm_system_backend.api.error.ResourceNotFoundException ResourceNotFoundException}
-     *
-     * @param id tag id
-     * @return tag name
-     */
-    String queryTag(Long id);
+    void deleteTag(String name);
 
     /**
      * find all
@@ -41,6 +18,14 @@ public interface TagService {
      * @return all tag names
      */
     List<String> findAllTags();
+
+    /**
+     * fina all tags with each corresponding products <br>
+     * Product must be loaded
+     *
+     * @return Tags
+     */
+    List<Tag> findAllTagsWithProducts();
 
     String tag2String(Tag tag);
 
