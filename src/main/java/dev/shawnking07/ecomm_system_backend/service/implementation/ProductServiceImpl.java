@@ -190,8 +190,7 @@ public class ProductServiceImpl implements ProductService {
             String s = StringUtils.substringAfterLast(v, ".");
             return NumberUtils.toLong(s);
         }).forEach(v -> {
-            Long amountInOrders = productAmountInOrders.get(v);
-            if (amountInOrders == null) return;
+            Long amountInOrders = productAmountInOrders.getOrDefault(v, 0L);
             Long cacheAmount = getProductAmountFromCache(v);
             if (cacheAmount == null) return;
             Optional<Product> byId = productRepository.findById(v);
