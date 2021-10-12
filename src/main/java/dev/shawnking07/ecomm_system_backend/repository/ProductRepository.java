@@ -7,11 +7,29 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    @Query(value = "SELECT DISTINCT p.*\n" +
-            "FROM product p\n" +
-            "LEFT JOIN products_tags pt on p.id = pt.product_id\n" +
-            "LEFT JOIN tag t on t.id = pt.tag_id\n" +
-            "WHERE\n" +
-            "to_tsvector(p.name || coalesce(p.description,'') || coalesce(t.name, '')) @@ plainto_tsquery(?1)", nativeQuery = true)
+    @Query(value = "SELECT id,\n" +
+            "       created_by,\n" +
+            "       created_date,\n" +
+            "       last_modified_by,\n" +
+            "       last_modified_date,\n" +
+            "       amount,\n" +
+            "       discount_price,\n" +
+            "       filename,\n" +
+            "       filetype,\n" +
+            "       name,\n" +
+            "       picture,\n" +
+            "       price,\n" +
+            "       description\n" +
+            "FROM (\n" +
+            "         SELECT DISTINCT ts_rank_cd(to_tsvector('english',\n" +
+            "                                                p.name || ' ' || coalesce(p.description, '') || ' ' ||\n" +
+            "                                                coalesce(t.name, '')),\n" +
+            "                                    plainto_tsquery(?1)) AS score,\n" +
+            "                         p.*\n" +
+            "         FROM product p\n" +
+            "                  LEFT JOIN products_tags pt on p.id = pt.product_id\n" +
+            "                  LEFT JOIN tag t on t.id = pt.tag_id\n" +
+            "     ) as sc\n" +
+            "ORDER BY score DESC", nativeQuery = true)
     List<Product> fullTextSearch(String info);
 }
