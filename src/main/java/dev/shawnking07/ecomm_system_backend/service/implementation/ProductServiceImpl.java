@@ -222,8 +222,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public List<ProductVM> listProducts() {
-        return productRepository.findAll().stream()
+    public List<ProductVM> searchProducts(String search) {
+        List<Product> products = List.of();
+        if (search != null) {
+            products = productRepository.fullTextSearch(search);
+        }
+        if (products.isEmpty()) {
+            products = productRepository.findAll();
+        }
+        return products.stream()
                 .map(this::product2ProductVM)
                 .collect(Collectors.toList());
     }

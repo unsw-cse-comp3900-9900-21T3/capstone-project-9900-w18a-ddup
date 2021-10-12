@@ -54,11 +54,13 @@ public interface ProductService {
     ProductVM product2ProductVM(Product product);
 
     /**
-     * Simply return all products <br> cache disabled
+     * full text search products on name and description <br>
+     * if search is not provided simply return all products
      *
+     * @param search search value
      * @return All Products
      */
-    List<ProductVM> listProducts();
+    List<ProductVM> searchProducts(@Nullable String search);
 
     /**
      * List current user's recommended products <br>

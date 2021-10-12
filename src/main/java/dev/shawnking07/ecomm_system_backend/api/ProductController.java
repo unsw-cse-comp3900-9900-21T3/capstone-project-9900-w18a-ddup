@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
@@ -59,9 +60,9 @@ public class ProductController {
         return productService.queryProduct(id);
     }
 
-    @Operation(summary = "List all products", description = "Cache disabled now, all infos are basically realtime")
+    @Operation(summary = "Search products", description = "full text search on name and description. <br>If nothing searched, simply return all data")
     @GetMapping
-    public List<ProductVM> listAllProducts() {
-        return productService.listProducts();
+    public List<ProductVM> searchProducts(@RequestParam(required = false) Optional<String> search) {
+        return productService.searchProducts(search.orElse(null));
     }
 }
