@@ -3,6 +3,7 @@ import { Form, Button, message, Select, Input, Upload } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
 
 import { addProductItem } from "@/services/product"
+import { productTags } from "@/constants"
 
 const { Option } = Select
 
@@ -98,10 +99,11 @@ function AddItem({ token, quit }) {
                     initialValue={null}
                 >
                     <Select>
-                        <Option value='foods'> foods </Option>
-                        <Option value='electornics'> electornics </Option>
-                        <Option value='daily necessities'> daily necessities </Option>
-                        <Option value='clothing'> clothing </Option>
+                        {productTags.map((item, index) => (
+                            <Option key={index} value={item}> 
+                                {item}
+                            </Option>
+                        ))}
                     </Select>
                 </Form.Item>
                 <Form.Item

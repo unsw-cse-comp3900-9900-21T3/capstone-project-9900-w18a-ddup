@@ -1,35 +1,65 @@
 import React, { memo, useState } from "react";
-import { Pagination, Card } from "antd";
+import { Pagination, Card, message } from "antd";
 
 import { ProductCardWrapper } from "./style";
+import { itemsPerPageForCustomer, imgBaseURL } from "@/constants";
 
 const gridStyle = {
-    width: '33.3%',
-    height: '400px',
+    width: `${200 / itemsPerPageForCustomer}%`,
+    height: '350px',
     textAlign: 'center',
-  };
+};
 
 
-function ProductCard() {
+function ProductCard({ title, infoArr, token, history }) {
     const [current, setCurrent] = useState(1)
 
-
-    function onChange(page) {
-        console.log(page)
-        setCurrent(page)
+    function cardClick(item) {
+        if (token === undefined) {
+            message.error('please login')
+        } else {
+            history.push('/detail/' + item.id)
+        }
+    }
+    function productsShow() {
+        return infoArr.slice((current - 1) * itemsPerPageForCustomer, current * itemsPerPageForCustomer)
+            .map((item, index) => {
+                return (
+                    <Card.Grid
+                        key={index}
+                        style={gridStyle}
+                        className='card'
+                    >
+                        <div onClick={() => { cardClick(item) }}>
+                            <img
+                                alt='ing...'
+                                width={300}
+                                src={imgBaseURL + item.imagePaths[0]}
+                            />
+                            <h3> {item.name} </h3>
+                            <h4> {item.price} </h4>
+                            <h4
+                                style={{ color: 'red' }}
+                            >
+                                {item.discountPrice}
+                            </h4>
+                        </div>
+                    </Card.Grid>
+                )
+            })
     }
 
     return (
         <ProductCardWrapper>
-            <Card title='lalala'>
-                <Card.Grid style={gridStyle}>Content</Card.Grid>
-                <Card.Grid style={gridStyle}>Content</Card.Grid>
-                <Card.Grid style={gridStyle}>Content</Card.Grid>
-                <Card.Grid style={gridStyle}>Content</Card.Grid>
-                <Card.Grid style={gridStyle}>Content</Card.Grid>
-                <Card.Grid style={gridStyle}>Content</Card.Grid>
+            <Card title={title}>
+                {productsShow()}
             </Card >
-            <Pagination className='card' current={current} onChange={(page) => { onChange(page) }} total={15} defaultPageSize={6}/>
+            <Pagination
+                className='pagination'
+                current={current}
+                onChange={(page) => { setCurrent(page) }}
+                total={infoArr.length}
+                defaultPageSize={itemsPerPageForCustomer} />
         </ProductCardWrapper>
     )
 }

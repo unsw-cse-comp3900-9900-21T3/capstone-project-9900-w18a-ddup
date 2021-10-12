@@ -1,10 +1,43 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { Carousel } from 'antd';
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 import { ShowWrapper } from './style';
 import ProductCard from "@/components/product-card"; 
+import { getProductsInfoAction } from "@/pages/management/store/actionCreators";
+import { productTags } from "@/constants"
 
-function Show() {
+function Show({history}) {
+
+    const dispatch = useDispatch()
+    const { productsArr, token } = useSelector(state => ({
+        productsArr: state.Product.ProductsInfo,
+        token: state.User.UserIDInfo.token
+    }), shallowEqual)
+
+    useEffect(() => {
+        dispatch(getProductsInfoAction())
+    },[dispatch])
+
+    //分类展示
+    function productCardShow() {
+        const obj = {}
+        for (let i of productTags) {
+            obj[i] = []
+        }
+        for (let i of productsArr) {
+            obj[i.tags[0]].push(i)
+        }
+        return productTags.map((item, index) => (
+            <ProductCard 
+                key = {index}
+                title = {item}
+                infoArr = {obj[item]}
+                token = {token}
+                history = {history}
+            />
+        ))
+    }
 
     return (
         <ShowWrapper>
@@ -41,8 +74,7 @@ function Show() {
                     </Carousel>
                 </div>
             </div>
-            <ProductCard/>
-            <ProductCard/>
+            {productCardShow()}
         </ShowWrapper>
     )
 }

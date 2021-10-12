@@ -38,4 +38,8 @@ export const imgBaseURL = 'https://ecomm.shawnking07.dev'
 
 export const itemsPerPageForAdmin = 8
 
-export const placeholderURL = '@/assets/img/placeholder.png'
+export const itemsPerPageForCustomer = 6
+
+export const productTags = ['foods', 'electornics', 'daily necessities', 'clothing']
+
+

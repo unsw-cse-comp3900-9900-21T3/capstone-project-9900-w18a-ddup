@@ -4,7 +4,7 @@ import { UploadOutlined } from '@ant-design/icons';
 
 import { deleteProductItem, editProductItem } from "@/services/product";
 import { ProductFormWrapper } from "./style";
-import { imgBaseURL } from "@/constants"
+import { imgBaseURL, productTags } from "@/constants"
 
 const { Option } = Select
 
@@ -26,7 +26,13 @@ function ProductForm({ productInfo, token, update }) {
         setEditLoading(true)
         const formData = new FormData()
         for (let [key, value] of Object.entries(values)) {
-            formData.append(key, value)
+            if (key !== 'files') {
+                formData.append(key, value)
+            } else {
+                if (value !== undefined) {
+                    formData.append(key, value.file)
+                }
+            }
         }
         editProductItem(productInfo.id, formData, token)
             .then(() => {
@@ -114,13 +120,14 @@ function ProductForm({ productInfo, token, update }) {
                     initialValue={productInfo.tags[0]}
                 >
                     <Select>
-                        <Option value='foods'> foods </Option>
-                        <Option value='electornics'> electornics </Option>
-                        <Option value='daily necessities'> daily necessities </Option>
-                        <Option value='clothing'> clothing </Option>
+                        {productTags.map((item, index) => (
+                            <Option key={index} value={item}>
+                                {item}
+                            </Option>
+                        ))}
                     </Select>
                 </Form.Item>
-                {/* <Form.Item
+                <Form.Item
                     label='figure'
                     name='files'
                 >
@@ -129,7 +136,7 @@ function ProductForm({ productInfo, token, update }) {
                     >
                         <Button icon={<UploadOutlined />}>reselect </Button>
                     </Upload>
-                </Form.Item> */}
+                </Form.Item>
                 <Image
                     src={imgBaseURL + productInfo.imagePaths[0]}
                     width={150}
@@ -147,13 +154,13 @@ function ProductForm({ productInfo, token, update }) {
                             }}
                         >
                             loading...
-                        </div>}
+                        </div>
+                    }
                 />
                 <Form.Item
                     wrapperCol={{ span: 25 }}
                 >
                     <Button
-                        disabled
                         htmlType="submit"
                         style={{
                             marginRight: '10px'
@@ -162,13 +169,6 @@ function ProductForm({ productInfo, token, update }) {
                     >
                         edit
                     </Button>
-                    {/* <Button
-                        style={{
-                            marginRight: '10px'
-                        }}
-                    >
-                        select
-                    </Button> */}
                     <Button
                         danger
                         loading={deleteLoading}
