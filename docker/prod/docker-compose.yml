@@ -2,7 +2,7 @@ version: "3"
 services:
   app:
     build:
-      context: ~/github-action-deploy
+      context: ../../
       dockerfile: docker/prod/Dockerfile
     ports:
       - "8080:8080"
