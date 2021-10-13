@@ -1,20 +1,19 @@
 import {
-    GET_PRODUCTS_INFO
+    GET_PRODUCTS_INFO,
+    GET_PRODUCT_INFO,
 } from "./constants"
 
 const defaultState = {
     ProductsInfo: [],
+    // ProductInfo: {},
 }
 
 function reducer(state=defaultState, action) {
     switch(action.type) {
-    //     case SET_USER_IDInfo:
-    //         const tem = {...state.UserIDInfo, ...action.userIDInfo}
-    //         return {UserIDInfo: tem}
-    //    case CLEAR_USER_IDInfo:
-    //        return {UserIDInfo: {}}
         case GET_PRODUCTS_INFO:
-            return {...state, ProductsInfo: action.productsInfo}
+            return {...state, ProductsInfo: action.productsInfo}        
+        case GET_PRODUCT_INFO:
+            return {...state, ProductInfo: action.productInfo}
         default:
             return state
     }

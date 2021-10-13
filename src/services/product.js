@@ -6,6 +6,12 @@ export function getProductsInfo() {
     })
 }
 
+export function getProductInfo(id) {
+    return request({
+        url: '/products/' + id
+    })
+}
+
 export function addProductItem(formData, token) {
     return request({
         url: '/products',
