@@ -35,7 +35,8 @@ function SignUp({ signUpCancel }) {
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your username!',
+                            message: 'Please input your username! At least 4 chats',
+                            min: 4,
                         },
                     ]}
                 >
@@ -64,7 +65,7 @@ function SignUp({ signUpCancel }) {
                     name="phone"
                     rules={[
                         {
-                            required: true,
+                            // required: true,
                             message: 'Please input your phone number!',
                         },
                     ]}
@@ -78,7 +79,8 @@ function SignUp({ signUpCancel }) {
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your password!',
+                            message: 'Please input your password! At least 4 chats',
+                            min: 4,
                         },
                     ]}
                 >

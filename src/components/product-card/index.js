@@ -38,11 +38,12 @@ function ProductCard({ title, infoArr, token, history }) {
                             />
                             <h3> {item.name} </h3>
                             <h4> {item.price} </h4>
-                            <h4
-                                style={{ color: 'red' }}
-                            >
-                                {item.discountPrice}
-                            </h4>
+                            {item.discountPrice !== 0 &&
+                                <h4
+                                    style={{ color: 'red' }}
+                                >
+                                    {item.discountPrice}
+                                </h4>}
                         </div>
                     </Card.Grid>
                 )
