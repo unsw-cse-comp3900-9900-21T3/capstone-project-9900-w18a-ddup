@@ -76,7 +76,7 @@ function AddItem({ token, quit }) {
                 <Form.Item
                     label='discountPrice'
                     name='discountPrice'
-                    initialValue={null}
+                    initialValue={0}
                 >
                     <Input />
                 </Form.Item>
