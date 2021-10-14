@@ -21,6 +21,8 @@ public class OrderVM {
     private String shippingAddress;
     private String buyer;
     private String payer;
+    @Builder.Default
+    private Boolean discount = Boolean.FALSE;
 
     @Jacksonized
     @Builder
@@ -28,7 +30,6 @@ public class OrderVM {
     @Getter
     public static class OrderProductsVM {
         private ProductVM product;
-        private Boolean discount;
         private Long amount;
     }
 }

@@ -23,6 +23,9 @@ public class OrderDTO {
     private String shippingAddress;
     @Schema(hidden = true)
     private BigDecimal totalPrice;
+    @Schema(hidden = true)
+    @Builder.Default
+    private Boolean discount = Boolean.FALSE;
 
     @Jacksonized
     @Builder
@@ -31,8 +34,6 @@ public class OrderDTO {
     public static class OrderProductsDTO {
         @NotNull
         private Long productId;
-        @Builder.Default
-        private Boolean discount = Boolean.FALSE;
         @Builder.Default
         private Long amount = 1L;
     }

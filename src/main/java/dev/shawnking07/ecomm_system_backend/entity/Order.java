@@ -29,12 +29,13 @@ public class Order extends BaseEntity {
     @Positive
     private BigDecimal totalPrice;
     private String shippingAddress;
+    @NotNull
+    private Boolean discount = Boolean.FALSE;
 
-    public void addProduct(Product product, Long amount, Boolean discount) {
+    public void addProduct(Product product, Long amount) {
         OrderProducts orderProducts = new OrderProducts();
         orderProducts.setProduct(product);
         orderProducts.setAmount(amount);
-        orderProducts.setDiscount(discount);
         this.products.add(orderProducts);
     }
 
@@ -47,7 +48,6 @@ public class Order extends BaseEntity {
         @OneToOne
         private Product product;
         private Long amount = 1L;
-        private Boolean discount;
     }
 
 }

@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Nullable;
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,20 +44,21 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper modelMapper;
     private final DbFileService dbFileService;
     private final StringRedisTemplate stringRedisTemplate;
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     public ProductServiceImpl(ProductRepository productRepository,
                               TagRepository tagRepository, TagService tagService,
                               ModelMapper modelMapper,
                               DbFileService dbFileService,
-                              StringRedisTemplate stringRedisTemplate) {
+                              StringRedisTemplate stringRedisTemplate,
+                              RedisTemplate<String, Object> redisTemplate) {
         this.productRepository = productRepository;
         this.tagRepository = tagRepository;
         this.tagService = tagService;
         this.modelMapper = modelMapper;
         this.dbFileService = dbFileService;
         this.stringRedisTemplate = stringRedisTemplate;
+        this.redisTemplate = redisTemplate;
     }
 
     @Nullable
@@ -167,7 +167,11 @@ public class ProductServiceImpl implements ProductService {
         return stringRedisTemplate.opsForValue().decrement(PRODUCT_AMOUNT + id, delta);
     }
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+    /**
+     * For schedule correct product amount.
+     * Some orders may be expired.
+     */
+    @Scheduled(cron = "0 0/30 * * * ?")
     @Override
     public void correctProductAmountInCache() {
         log.info("Start correct Product amount in Redis.");
@@ -198,7 +202,7 @@ public class ProductServiceImpl implements ProductService {
             Product product = byId.get();
             Long dbAmount = product.getAmount();
             if (cacheAmount + amountInOrders != dbAmount) {
-                log.info("[Product Amount] [{}] [origin: {}] -> [new: {}]", product.getName(), cacheAmount, dbAmount - amountInOrders);
+                log.info("[Product amount correction] [{}] [{}] [origin: {}] -> [new: {}]", product.getId(), product.getName(), cacheAmount, dbAmount - amountInOrders);
                 setProductAmountToCache(v, dbAmount - amountInOrders);
             }
         });

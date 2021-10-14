@@ -2,10 +2,12 @@ package dev.shawnking07.ecomm_system_backend.service.implementation;
 
 import dev.shawnking07.ecomm_system_backend.api.error.ResourceNotFoundException;
 import dev.shawnking07.ecomm_system_backend.config.ApplicationProperties;
+import dev.shawnking07.ecomm_system_backend.dto.DiscountVM;
 import dev.shawnking07.ecomm_system_backend.dto.OrderDTO;
 import dev.shawnking07.ecomm_system_backend.dto.OrderVM;
 import dev.shawnking07.ecomm_system_backend.dto.ProductVM;
 import dev.shawnking07.ecomm_system_backend.entity.Order;
+import dev.shawnking07.ecomm_system_backend.entity.Product;
 import dev.shawnking07.ecomm_system_backend.entity.User;
 import dev.shawnking07.ecomm_system_backend.repository.OrderRepository;
 import dev.shawnking07.ecomm_system_backend.repository.ProductRepository;
@@ -14,16 +16,14 @@ import dev.shawnking07.ecomm_system_backend.security.SecurityUtils;
 import dev.shawnking07.ecomm_system_backend.service.OrderService;
 import dev.shawnking07.ecomm_system_backend.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -68,12 +68,7 @@ public class OrderServiceImpl implements OrderService {
                 throw new RuntimeException("Product is not enough");
             }
             productService.decreaseProductAmountInCache(v.getProductId(), v.getAmount());
-            if (v.getDiscount()) {
-                // calculate discount price
-                totalPrice = totalPrice.add(product.getDiscountPrice().multiply(new BigDecimal(v.getAmount())));
-            } else {
-                totalPrice = totalPrice.add(product.getPrice().multiply(new BigDecimal(v.getAmount())));
-            }
+            totalPrice = totalPrice.add(product.getPrice().multiply(new BigDecimal(v.getAmount())));
             OrderVM.OrderProductsVM build = OrderVM.OrderProductsVM.builder()
                     .amount(v.getAmount())
                     .product(product.toBuilder().amount(product.getAmount() - v.getAmount()).build())
@@ -81,12 +76,13 @@ public class OrderServiceImpl implements OrderService {
             productsVMS.add(build);
         }
 
-        OrderDTO orderWithPrice = orderDTO.toBuilder().totalPrice(totalPrice).build();
+        OrderDTO orderWithPrice = orderDTO.toBuilder().totalPrice(totalPrice).discount(Boolean.FALSE).build();
 
         String uuid = UUID.randomUUID().toString();
         // cache orderDTO for confirm and set expire time
-        redisTemplate.opsForHash().put(ORDER_NUMBER + uuid, "order", orderWithPrice);
-        redisTemplate.opsForHash().put(ORDER_NUMBER + uuid, "buyer", SecurityUtils.getCurrentUserLogin().orElse(""));
+        var order = Map.of("order", orderWithPrice,
+                "buyer", SecurityUtils.getCurrentUserLogin().orElse(""));
+        redisTemplate.opsForHash().putAll(ORDER_NUMBER + uuid, order);
         redisTemplate.expire(ORDER_NUMBER + uuid, properties.getOrderExpire());
 
         String s = Optional.ofNullable(orderDTO.getPayerUsername()).orElse(SecurityUtils.getCurrentUserLogin().orElse(""));
@@ -97,6 +93,72 @@ public class OrderServiceImpl implements OrderService {
                 .totalPrice(totalPrice)
                 .buyer(SecurityUtils.getCurrentUserLogin().orElse(""))
                 .payer(s)
+                .build();
+    }
+
+    @Override
+    public DiscountVM operateDiscount(String orderNumber) {
+        OrderDTO orderDTO = (OrderDTO) redisTemplate.opsForHash().get(ORDER_NUMBER + orderNumber, "order");
+        String buyerUsername = (String) redisTemplate.opsForHash().get(ORDER_NUMBER + orderNumber, "buyer");
+
+        if (orderDTO == null) throw new ResourceNotFoundException("orderNumber is wrong");
+        if (SecurityUtils.getCurrentUserLogin().stream().noneMatch(v -> StringUtils.equals(buyerUsername, v))) {
+            return DiscountVM.builder()
+                    .productIds(orderDTO.getProducts().stream()
+                            .map(OrderDTO.OrderProductsDTO::getProductId)
+                            .collect(Collectors.toList()))
+                    .build();
+        }
+        // update discount price
+        BigDecimal totalPrice = new BigDecimal(0L);
+        for (OrderDTO.OrderProductsDTO product : orderDTO.getProducts()) {
+            Product product1 = productRepository.findById(product.getProductId()).orElseThrow(ResourceNotFoundException::new);
+            BigDecimal discountPrice = product1.getDiscountPrice();
+            totalPrice = totalPrice.add(discountPrice.multiply(new BigDecimal(product1.getAmount())));
+        }
+        OrderDTO build = orderDTO.toBuilder().totalPrice(totalPrice).discount(Boolean.TRUE).build();
+        redisTemplate.opsForHash().put(ORDER_NUMBER + orderNumber, "order", build);
+        return DiscountVM.builder()
+                .orderNumber(orderNumber)
+                .productIds(orderDTO.getProducts().stream()
+                        .map(OrderDTO.OrderProductsDTO::getProductId)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    @Override
+    public OrderVM queryOrder(String orderNumber) {
+        OrderDTO orderDTO = (OrderDTO) redisTemplate.opsForHash().get(ORDER_NUMBER + orderNumber, "order");
+        String buyerUsername = (String) redisTemplate.opsForHash().get(ORDER_NUMBER + orderNumber, "buyer");
+        if (orderDTO == null) throw new ResourceNotFoundException("orderNumber is wrong");
+
+        List<OrderVM.OrderProductsVM> productsVMS = new ArrayList<>();
+        BigDecimal totalPrice = new BigDecimal(0);
+        for (OrderDTO.OrderProductsDTO v : orderDTO.getProducts()) {
+            ProductVM product = productService.queryProduct(v.getProductId());
+            if (product.getAmount() < v.getAmount()) {
+                log.info("Product [{}] is not enough", v.getProductId());
+                throw new RuntimeException("Product is not enough");
+            }
+            var price = orderDTO.getDiscount() ? product.getDiscountPrice() : product.getPrice();
+            totalPrice = totalPrice.add(price.multiply(new BigDecimal(v.getAmount())));
+            OrderVM.OrderProductsVM build = OrderVM.OrderProductsVM.builder()
+                    .amount(v.getAmount())
+                    .product(product.toBuilder()
+                            .amount(productService.getProductAmountFromCache(product.getId()))
+                            .build())
+                    .build();
+            productsVMS.add(build);
+        }
+
+        return OrderVM.builder()
+                .orderNumber(orderNumber)
+                .shippingAddress(orderDTO.getShippingAddress())
+                .products(productsVMS)
+                .totalPrice(totalPrice)
+                .buyer(buyerUsername)
+                .payer(orderDTO.getPayerUsername())
+                .discount(orderDTO.getDiscount())
                 .build();
     }
 
@@ -120,7 +182,7 @@ public class OrderServiceImpl implements OrderService {
             Long productAmountFromCache = productService.getProductAmountFromCache(v.getProductId());
             p.setAmount(productAmountFromCache != null ? productAmountFromCache : p.getAmount() - v.getAmount());
             productRepository.save(p);
-            order.addProduct(p, v.getAmount(), v.getDiscount());
+            order.addProduct(p, v.getAmount());
         });
 
         buyer.addPurchasedOrder(order);
@@ -142,7 +204,6 @@ public class OrderServiceImpl implements OrderService {
                 .payer(order.getPayer().getUsername())
                 .products(order.getProducts().stream().map(v -> OrderVM.OrderProductsVM.builder()
                         .product(productService.product2ProductVM(v.getProduct()))
-                        .discount(v.getDiscount())
                         .amount(v.getAmount())
                         .build()).collect(Collectors.toList()))
                 .build();

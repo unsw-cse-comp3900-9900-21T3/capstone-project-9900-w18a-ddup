@@ -9,8 +9,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,14 +65,11 @@ public class DbFileServiceImpl implements DbFileService {
         }
         DbFile dbFile = byId.get();
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.CONTENT_TYPE, dbFile.getFiletype());
-        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=" + dbFile.getFilename());
-        httpHeaders.set(HttpHeaders.CACHE_CONTROL, "max-age=" + properties.getDownloadLinkExpire().toSeconds());
-
-        return new ResponseEntity<>(
-                new InputStreamResource(new ByteArrayInputStream(dbFile.getContent())),
-                httpHeaders,
-                HttpStatus.OK);
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(properties.getDownloadLinkExpire()))
+                .lastModified(dbFile.getLastModifiedDate())
+                .contentType(MediaType.parseMediaType(dbFile.getFiletype()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=" + dbFile.getFilename())
+                .body(new InputStreamResource(new ByteArrayInputStream(dbFile.getContent())));
     }
 }
