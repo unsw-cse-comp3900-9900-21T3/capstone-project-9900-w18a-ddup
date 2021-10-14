@@ -6,6 +6,34 @@
 
 [![Run Gradle Test and Deploy to Server](https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-w18a-ddup/actions/workflows/test-deploy-dev.yml/badge.svg?branch=backend)](https://github.com/unsw-cse-comp3900-9900-21T3/capstone-project-9900-w18a-ddup/actions/workflows/test-deploy-dev.yml)
 
+## How to run
+
+The API will be hosted on port 8080. Swagger API doc will be hosted on [http://localhost:8080/swagger-ui.html]()
+
+### Requirements
+
+```shell
+# install JDK and docker require root access
+bash init.sh
+```
+
+### Development
+
+```shell
+# Run PostgreSQL and Redis
+pushd docker/dev
+docker-compose up -d
+popd
+./gradlew bootRun
+```
+
+### Deployment
+
+```shell
+cd docker/prod
+docker-compose up --build
+```
+
 ## Imported Packages
 
 - Spring Boot
