@@ -42,4 +42,8 @@ export const itemsPerPageForCustomer = 6
 
 export const productTags = ['foods', 'electornics', 'daily necessities', 'clothing']
 
+export const numberOfDiscountShow = 6
+
+export const numberOfRecommendationShow = 6
+
 

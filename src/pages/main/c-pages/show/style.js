@@ -15,10 +15,25 @@ export const ShowWrapper = style.div`
         .left-carousel, .right-carousel {
             width: 400px;
             height: 400px;
-            background-color:  blue;
+            text-align: center;
+        
+            .click:hover {
+                cursor:pointer
+            }
 
-            div {
-                height: 350px;
+            h3 {
+                color: red;
+            }
+            .slick-dots-top {       
+                li {
+                    background-color: gray;
+                }
+
+                .slick-active {
+                    button{
+                        background-color: red;
+                    }
+                }                
             }
         } 
 

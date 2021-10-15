@@ -27,8 +27,7 @@ function SignIn({ signInCancel }) {
                 signInCancel()
             })
         }).catch(err => {
-            // console.log('?', err.response)
-            message.error(err.response?.data.message, 1, () => {
+            message.error('login failed', 1, () => {
                 setLoading(false)
             })
         })
