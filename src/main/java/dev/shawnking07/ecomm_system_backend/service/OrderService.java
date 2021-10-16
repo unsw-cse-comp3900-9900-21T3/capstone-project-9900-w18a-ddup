@@ -1,6 +1,7 @@
 package dev.shawnking07.ecomm_system_backend.service;
 
 import dev.shawnking07.ecomm_system_backend.dto.DiscountVM;
+import dev.shawnking07.ecomm_system_backend.dto.MyOrderVM;
 import dev.shawnking07.ecomm_system_backend.dto.OrderDTO;
 import dev.shawnking07.ecomm_system_backend.dto.OrderVM;
 import dev.shawnking07.ecomm_system_backend.entity.Order;
@@ -22,7 +23,15 @@ public interface OrderService {
      */
     DiscountVM operateDiscount(String orderNumber);
 
+    /**
+     * get the unpaid order's info
+     *
+     * @param orderNumber
+     * @return
+     */
     OrderVM queryOrder(String orderNumber);
+
+    MyOrderVM findMyOrders();
 
     /**
      * save cached Order

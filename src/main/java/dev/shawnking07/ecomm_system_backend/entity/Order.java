@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,7 +25,7 @@ public class Order extends BaseEntity {
     private User payer;
 
     @ElementCollection
-    private List<OrderProducts> products;
+    private List<OrderProducts> products = new ArrayList<>();
     @NotNull
     @Positive
     private BigDecimal totalPrice;

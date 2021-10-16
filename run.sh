@@ -1,10 +1,7 @@
-echo "Gradle Clean"
-./gradlew clean
-sleep 5
-echo "Gradle Build"
-./gradlew build
+echo "Gradle Build Docker image"
+./gradlew jibDockerBuild
 
 echo "Build docker images and run"
-pushd docker/prod || exit
+pushd docker/submit || exit
 docker-compose up -d --build
 popd || exit

@@ -8,7 +8,7 @@
 
 ## How to run
 
-The API will be hosted on port 8080. Swagger API doc will be hosted on [http://localhost:8080/swagger-ui.html]()
+The API will be hosted on port 8080. Swagger API doc will be hosted on [http://<YOUR-HOST>:8080/swagger-ui.html]()
 
 ### Requirements
 
@@ -30,8 +30,9 @@ popd
 ### Deployment
 
 ```shell
-cd docker/prod
-docker-compose up --build
+./gradlew jibDockerBuild
+cd docker/submit
+docker-compose up
 ```
 
 ## Imported Packages

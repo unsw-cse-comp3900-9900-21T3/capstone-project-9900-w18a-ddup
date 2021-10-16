@@ -2,10 +2,7 @@ package dev.shawnking07.ecomm_system_backend.service.implementation;
 
 import dev.shawnking07.ecomm_system_backend.api.error.ResourceNotFoundException;
 import dev.shawnking07.ecomm_system_backend.config.ApplicationProperties;
-import dev.shawnking07.ecomm_system_backend.dto.DiscountVM;
-import dev.shawnking07.ecomm_system_backend.dto.OrderDTO;
-import dev.shawnking07.ecomm_system_backend.dto.OrderVM;
-import dev.shawnking07.ecomm_system_backend.dto.ProductVM;
+import dev.shawnking07.ecomm_system_backend.dto.*;
 import dev.shawnking07.ecomm_system_backend.entity.Order;
 import dev.shawnking07.ecomm_system_backend.entity.Product;
 import dev.shawnking07.ecomm_system_backend.entity.User;
@@ -164,12 +161,25 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
+    public MyOrderVM findMyOrders() {
+        String s = SecurityUtils.getCurrentUserLogin().orElseThrow(RuntimeException::new);
+        var bought = orderRepository.findOrderByBuyer_Username(s).stream().map(this::order2orderVM).collect(Collectors.toList());
+        var paid = orderRepository.findOrderByPayer_Username(s).stream().map(this::order2orderVM).collect(Collectors.toList());
+        return MyOrderVM.builder()
+                .bought(bought)
+                .paid(paid)
+                .build();
+    }
+
+    @Transactional
+    @Override
     public void confirmOrder(String orderNumber) {
         OrderDTO orderDTO = (OrderDTO) redisTemplate.opsForHash().get(ORDER_NUMBER + orderNumber, "order");
         String buyerUsername = (String) redisTemplate.opsForHash().get(ORDER_NUMBER + orderNumber, "buyer");
 
         if (orderDTO == null) throw new ResourceNotFoundException("orderNumber is wrong");
-        Order order = modelMapper.map(orderDTO, Order.class);
+        var ooMap = modelMapper.typeMap(OrderDTO.class, Order.class).addMappings(mapping -> mapping.skip(Order::setProducts));
+        Order order = ooMap.map(orderDTO);
 
         User buyer = userRepository.findByUsernameIgnoreCase(buyerUsername).orElseThrow(ResourceNotFoundException::new);
         order.setBuyer(buyer);
@@ -181,15 +191,8 @@ public class OrderServiceImpl implements OrderService {
             var p = productRepository.findById(v.getProductId()).orElseThrow(ResourceNotFoundException::new);
             Long productAmountFromCache = productService.getProductAmountFromCache(v.getProductId());
             p.setAmount(productAmountFromCache != null ? productAmountFromCache : p.getAmount() - v.getAmount());
-            productRepository.save(p);
             order.addProduct(p, v.getAmount());
         });
-
-        buyer.addPurchasedOrder(order);
-        payer.addPaidOrder(order);
-
-        userRepository.save(buyer);
-        userRepository.save(payer);
 
         redisTemplate.delete(ORDER_NUMBER + orderNumber);
         orderRepository.save(order);

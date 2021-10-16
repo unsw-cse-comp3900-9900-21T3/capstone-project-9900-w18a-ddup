@@ -1,7 +1,9 @@
-sudo apt update && sudo apt install -y curl openjdk-11-jdk-headless docker-compose
+sudo apt update && sudo apt install -y curl openjdk-11-jdk-headless
+sudo apt-get remove docker docker-engine docker.io containerd runc
 
-echo "Install Docker and docker-compose"
 curl -fsSL https://get.docker.com | sh
+
+sudo apt install -y docker-compose
 
 sudo groupadd docker
 sudo usermod -aG docker "$USER"

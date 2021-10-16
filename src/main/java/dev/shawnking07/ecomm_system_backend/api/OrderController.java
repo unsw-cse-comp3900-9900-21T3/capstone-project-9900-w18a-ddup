@@ -1,6 +1,7 @@
 package dev.shawnking07.ecomm_system_backend.api;
 
 import dev.shawnking07.ecomm_system_backend.dto.DiscountVM;
+import dev.shawnking07.ecomm_system_backend.dto.MyOrderVM;
 import dev.shawnking07.ecomm_system_backend.dto.OrderDTO;
 import dev.shawnking07.ecomm_system_backend.dto.OrderVM;
 import dev.shawnking07.ecomm_system_backend.service.OrderService;
@@ -38,7 +39,7 @@ public class OrderController {
         return orderService.operateDiscount(orderNumber);
     }
 
-    @Operation(summary = "Query order")
+    @Operation(summary = "Query order", description = "query order which has not been confirmed")
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{orderNumber}")
@@ -52,5 +53,13 @@ public class OrderController {
     @PostMapping("/confirm")
     public void confirmOrder(@RequestBody String orderNumber) {
         orderService.confirmOrder(orderNumber);
+    }
+
+    @Operation(summary = "My orders")
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping
+    public MyOrderVM findAllMyOrders() {
+        return orderService.findMyOrders();
     }
 }
