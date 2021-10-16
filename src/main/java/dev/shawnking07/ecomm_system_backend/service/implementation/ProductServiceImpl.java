@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -171,7 +172,7 @@ public class ProductServiceImpl implements ProductService {
      * For schedule correct product amount.
      * Some orders may be expired.
      */
-    @Scheduled(cron = "0 0/30 * * * ?")
+    @Scheduled(fixedRate = 30, timeUnit = TimeUnit.MINUTES)
     @Override
     public void correctProductAmountInCache() {
         log.info("Start correct Product amount in Redis.");
