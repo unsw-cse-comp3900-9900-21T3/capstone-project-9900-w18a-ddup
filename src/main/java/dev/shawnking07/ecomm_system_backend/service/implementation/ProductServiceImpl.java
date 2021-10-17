@@ -9,7 +9,6 @@ import dev.shawnking07.ecomm_system_backend.entity.DbFile;
 import dev.shawnking07.ecomm_system_backend.entity.Product;
 import dev.shawnking07.ecomm_system_backend.entity.Tag;
 import dev.shawnking07.ecomm_system_backend.repository.ProductRepository;
-import dev.shawnking07.ecomm_system_backend.repository.TagRepository;
 import dev.shawnking07.ecomm_system_backend.service.DbFileService;
 import dev.shawnking07.ecomm_system_backend.service.ProductService;
 import dev.shawnking07.ecomm_system_backend.service.TagService;
@@ -40,7 +39,6 @@ public class ProductServiceImpl implements ProductService {
     private final static String ORDER_NUMBER = "order.number.";
 
     private final ProductRepository productRepository;
-    private final TagRepository tagRepository;
     private final TagService tagService;
     private final ModelMapper modelMapper;
     private final DbFileService dbFileService;
@@ -48,13 +46,12 @@ public class ProductServiceImpl implements ProductService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     public ProductServiceImpl(ProductRepository productRepository,
-                              TagRepository tagRepository, TagService tagService,
+                              TagService tagService,
                               ModelMapper modelMapper,
                               DbFileService dbFileService,
                               StringRedisTemplate stringRedisTemplate,
                               RedisTemplate<String, Object> redisTemplate) {
         this.productRepository = productRepository;
-        this.tagRepository = tagRepository;
         this.tagService = tagService;
         this.modelMapper = modelMapper;
         this.dbFileService = dbFileService;
@@ -177,17 +174,11 @@ public class ProductServiceImpl implements ProductService {
     public void correctProductAmountInCache() {
         log.info("Start correct Product amount in Redis.");
         Set<String> keys = redisTemplate.keys(ORDER_NUMBER + "*");
-        if (keys == null) return;
-        Map<Long, Long> productAmountInOrders = new HashMap<>();
-        keys.forEach(v -> {
-            OrderDTO order = (OrderDTO) redisTemplate.opsForHash().get(v, "order");
-            if (order == null) return;
-            List<OrderDTO.OrderProductsDTO> products = order.getProducts();
-            products.forEach(p -> {
-                Long orDefault = productAmountInOrders.getOrDefault(p.getProductId(), 0L);
-                productAmountInOrders.put(p.getProductId(), orDefault + p.getAmount());
-            });
-        });
+        if (keys == null) keys = Collections.emptySet();
+        Map<Long, Long> productAmountInOrders = keys.stream()
+                .flatMap(v -> ((OrderDTO) Objects.requireNonNull(redisTemplate.opsForHash().get(v, "order"))).getProducts().stream())
+                .collect(Collectors.groupingBy(OrderDTO.OrderProductsDTO::getProductId,
+                        Collectors.summingLong(OrderDTO.OrderProductsDTO::getAmount)));
 
         Set<String> productKeys = stringRedisTemplate.keys(PRODUCT_AMOUNT + "*");
         if (productKeys == null) return;

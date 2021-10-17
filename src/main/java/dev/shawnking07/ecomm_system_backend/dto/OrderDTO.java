@@ -6,8 +6,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import java.util.List;
 @Getter
 public class OrderDTO {
     @NotNull
+    @Valid
     private List<OrderProductsDTO> products;
     private String payerUsername;
     @NotBlank
@@ -35,6 +38,7 @@ public class OrderDTO {
         @NotNull
         private Long productId;
         @Builder.Default
+        @Positive
         private Long amount = 1L;
     }
 }
