@@ -1,9 +1,6 @@
 package dev.shawnking07.ecomm_system_backend.api;
 
-import dev.shawnking07.ecomm_system_backend.dto.DiscountVM;
-import dev.shawnking07.ecomm_system_backend.dto.MyOrderVM;
-import dev.shawnking07.ecomm_system_backend.dto.OrderDTO;
-import dev.shawnking07.ecomm_system_backend.dto.OrderVM;
+import dev.shawnking07.ecomm_system_backend.dto.*;
 import dev.shawnking07.ecomm_system_backend.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -35,8 +32,8 @@ public class OrderController {
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/discount")
-    public DiscountVM operateDiscount(@RequestBody String orderNumber) {
-        return orderService.operateDiscount(orderNumber);
+    public DiscountVM operateDiscount(@RequestBody OrderNumberDTO orderNumberDTO) {
+        return orderService.operateDiscount(orderNumberDTO.getOrderNumber());
     }
 
     @Operation(summary = "Query order", description = "query order which has not been confirmed")
@@ -51,8 +48,8 @@ public class OrderController {
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/confirm")
-    public void confirmOrder(@RequestBody String orderNumber) {
-        orderService.confirmOrder(orderNumber);
+    public void confirmOrder(@RequestBody OrderNumberDTO orderNumberDTO) {
+        orderService.confirmOrder(orderNumberDTO.getOrderNumber());
     }
 
     @Operation(summary = "My orders")
