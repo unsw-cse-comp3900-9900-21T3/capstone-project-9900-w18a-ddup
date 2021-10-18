@@ -1,20 +1,36 @@
 import React, { memo } from "react";
-import { shallowEqual, useSelector } from "react-redux";
-import { Image, Card, Button } from "antd";
+import { shallowEqual, useSelector, useDispatch } from "react-redux";
+import { Image, Card, Button, message } from "antd";
 
-import { imgBaseURL } from "@/constants"
+import { imgBaseURL } from "@/constants";
+import { addProductAction } from "@/pages/cart/store/actionCreators";
 import { DetailWrapper } from "./style";
+
 
 function Detail({ match, history }) {
     const id = match.params.id
 
-    const { productsArr } = useSelector(state => ({
+    const dispatch = useDispatch()
+    const { productsArr, productsArrInCart } = useSelector(state => ({
         productsArr: state.Product.ProductsInfo,
+        productsArrInCart: state.Cart.productsArrInCart
     }), shallowEqual)
 
     const productInfo = productsArr.find(item => 
         item.id === +id
     ) || {}
+
+    function addIntoCart(id) {
+        const index = productsArrInCart.find(item => {
+            return +item === +id
+        })
+        if(index) {
+            message.error('please do not add repeatly')
+        } else {
+            dispatch(addProductAction(id))
+            message.success('add success')
+        }
+    }
 
     return (
         <DetailWrapper>
@@ -35,9 +51,10 @@ function Detail({ match, history }) {
                         </p>
                         <h3> Price: {productInfo.price} </h3>
                         <h3> DiscountPrice: {productInfo.discountPrice} </h3>
+                        <h3> Amount: {productInfo.amount} </h3>
                     </Card>
                     <div className='option'>
-                        <Button size='large'> add </Button>
+                        <Button size='large' onClick={() => { addIntoCart(productInfo.id) }}> add </Button>
                         <Button disabled size='large'> join group </Button>
                     </div>
                 </div>

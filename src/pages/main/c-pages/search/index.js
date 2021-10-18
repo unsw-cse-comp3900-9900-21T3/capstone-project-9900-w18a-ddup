@@ -1,9 +1,9 @@
 import React, { memo, useEffect, useMemo } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { Table, Button, message } from 'antd'
+import { Table, Button, message } from 'antd';
 
 import { getProductsInfoAction } from "@/pages/management/store/actionCreators";
-import { imgBaseURL } from "@/constants"
+import { imgBaseURL } from "@/constants";
 
 function Search({ location, history }) {
     const keyWord = location.state.keyWord
@@ -89,6 +89,7 @@ function Search({ location, history }) {
             <Table
                 columns={columns}
                 dataSource={searchRes}
+                pagination={false}
             />
         </div>
     )
