@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -99,15 +98,9 @@ public class UserServiceImpl implements UserService {
         Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
         if (currentUserLogin.isEmpty()) return Optional.empty();
         var uuMap = modelMapper.typeMap(User.class, UserVM.UserVMBuilder.class);
-        uuMap.addMappings(mapping -> {
-            mapping.skip(UserVM.UserVMBuilder::purchases);
-            mapping.skip(UserVM.UserVMBuilder::paidOrders);
-        });
         return userRepository.findByUsernameIgnoreCase(currentUserLogin.get())
                 .map(v -> uuMap.map(v)
                         .userType(roleService.roles2UserType(v.getRoles()))
-                        .purchases(v.getPurchases().stream().map(orderService::order2orderVM).collect(Collectors.toList()))
-                        .paidOrders(v.getPaidOrders().stream().map(orderService::order2orderVM).collect(Collectors.toList()))
                         .build());
     }
 }

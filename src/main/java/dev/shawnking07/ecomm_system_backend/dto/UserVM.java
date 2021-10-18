@@ -5,9 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Jacksonized
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -19,9 +16,4 @@ public class UserVM {
     private String address;
     private String postcode;
     private UserType userType;
-
-    @Builder.Default
-    private List<OrderVM> purchases = new ArrayList<>();
-    @Builder.Default
-    private List<OrderVM> paidOrders = new ArrayList<>();
 }

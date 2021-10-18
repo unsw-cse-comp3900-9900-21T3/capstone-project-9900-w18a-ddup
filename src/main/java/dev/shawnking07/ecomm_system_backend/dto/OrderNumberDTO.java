@@ -5,10 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
+import javax.validation.constraints.NotEmpty;
+
 @Jacksonized
 @Builder(toBuilder = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class OrderNumberDTO {
+    @NotEmpty
     private String orderNumber;
 }

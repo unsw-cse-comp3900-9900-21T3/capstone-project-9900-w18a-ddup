@@ -32,7 +32,7 @@ public class OrderController {
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/discount")
-    public DiscountVM operateDiscount(@RequestBody OrderNumberDTO orderNumberDTO) {
+    public DiscountVM operateDiscount(@Valid @RequestBody OrderNumberDTO orderNumberDTO) {
         return orderService.operateDiscount(orderNumberDTO.getOrderNumber());
     }
 
@@ -48,7 +48,7 @@ public class OrderController {
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/confirm")
-    public void confirmOrder(@RequestBody OrderNumberDTO orderNumberDTO) {
+    public void confirmOrder(@Valid @RequestBody OrderNumberDTO orderNumberDTO) {
         orderService.confirmOrder(orderNumberDTO.getOrderNumber());
     }
 

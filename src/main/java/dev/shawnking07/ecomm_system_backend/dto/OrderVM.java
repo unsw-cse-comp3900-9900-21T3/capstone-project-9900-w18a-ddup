@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 
 @Jacksonized
@@ -23,6 +24,7 @@ public class OrderVM {
     private String payer;
     @Builder.Default
     private Boolean discount = Boolean.FALSE;
+    private Instant paidTime;
 
     @Jacksonized
     @Builder

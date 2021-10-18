@@ -205,6 +205,7 @@ public class OrderServiceImpl implements OrderService {
         return ooMap.map(order)
                 .buyer(order.getBuyer().getUsername())
                 .payer(order.getPayer().getUsername())
+                .paidTime(order.getCreatedDate())
                 .products(order.getProducts().stream().map(v -> OrderVM.OrderProductsVM.builder()
                         .product(productService.product2ProductVM(v.getProduct()))
                         .amount(v.getAmount())
