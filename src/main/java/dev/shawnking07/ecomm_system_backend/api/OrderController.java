@@ -35,8 +35,6 @@ public class OrderController {
     }
 
     @Operation(summary = "Query order", description = "query order which has not been confirmed")
-    @SecurityRequirement(name = "bearerAuth")
-    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{orderNumber}")
     public OrderVM queryOrder(@PathVariable String orderNumber) {
         return orderService.queryOrder(orderNumber);
