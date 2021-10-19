@@ -10,3 +10,6 @@ I draw the ER diagram, system architecture diagram and initiated the backend cod
 Week 4
 I finished the backend part of Sprint 1. Finish the home page sign-in and sign-up function for both user and admin. User and account system. Starting develop on other modules.
 I applied a CI system for auto test backend code and deploy API docs and system to my server https://ecomm.shawnking07.dev/swagger-ui.html
+
+Week 5
+I finished the CRUD api of products. Full text search for products. Fixed some bugs. And I switched backend api to a new server so that we can completed retroprospective demo A. Wrote some API docs at the same time.
