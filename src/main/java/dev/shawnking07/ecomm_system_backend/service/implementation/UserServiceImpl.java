@@ -8,7 +8,6 @@ import dev.shawnking07.ecomm_system_backend.entity.BaseEntity;
 import dev.shawnking07.ecomm_system_backend.entity.User;
 import dev.shawnking07.ecomm_system_backend.repository.UserRepository;
 import dev.shawnking07.ecomm_system_backend.security.SecurityUtils;
-import dev.shawnking07.ecomm_system_backend.service.OrderService;
 import dev.shawnking07.ecomm_system_backend.service.RoleService;
 import dev.shawnking07.ecomm_system_backend.service.UserService;
 import org.apache.commons.lang3.StringUtils;
@@ -26,14 +25,12 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
-    private final OrderService orderService;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleService roleService, OrderService orderService) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleService roleService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
-        this.orderService = orderService;
     }
 
     private boolean duplicateUser(String email) {

@@ -65,4 +65,11 @@ public class ProductController {
     public List<ProductVM> searchProducts(@RequestParam(required = false) Optional<String> search) {
         return productService.searchProducts(search.orElse(null));
     }
+
+    @Operation(summary = "Recommendation", description = "by selling statistics only top 5 will be returned")
+    @GetMapping("/recommendation")
+    public List<ProductVM> recommendation() {
+        return productService.listProductsWithRecommendation();
+    }
+
 }

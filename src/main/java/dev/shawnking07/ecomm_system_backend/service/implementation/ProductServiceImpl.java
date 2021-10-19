@@ -231,10 +231,10 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public List<ProductVM> listProductsWithRecommendation() {
-        // TODO: recommendation
-        return null;
+        return productRepository.findAllProductsOrderBySell().stream().map(this::product2ProductVM).collect(Collectors.toList());
     }
 
     @Override

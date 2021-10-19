@@ -32,4 +32,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "     ) as sc\n" +
             "ORDER BY score DESC", nativeQuery = true)
     List<Product> fullTextSearch(String info);
+
+    @Query(value = "SELECT p.*\n" +
+            "FROM product p\n" +
+            "LEFT JOIN order_products op on p.id = op.product_id\n" +
+            "LEFT JOIN \"order\" o on op.order_id = o.id\n" +
+            "WHERE p.amount > 0\n" +
+            "GROUP BY p.id\n" +
+            "ORDER BY sum(op.amount) DESC NULLS LAST\n" +
+            "LIMIT 5", nativeQuery = true)
+    List<Product> findAllProductsOrderBySell();
 }
