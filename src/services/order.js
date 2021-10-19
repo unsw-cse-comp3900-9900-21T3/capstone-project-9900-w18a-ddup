@@ -21,3 +21,13 @@ export function confirmOrder(orderNumber, token) {
         }
     })
 }
+
+export function getOrderInfo(token) {
+    return request({
+        url: '/orders',
+        method: 'GET',
+        headers: {
+            'authorization': 'Bearer '+ token
+        }
+    })
+}

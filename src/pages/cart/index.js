@@ -75,22 +75,22 @@ function Cart() {
                 setVisible(true)
             })
         }).catch(() => {
-            message.error('create order failed', 0.5, ()=> {
+            message.error('create order failed', 0.5, () => {
                 setLoading(false)
             })
         })
     }
 
     function confirmPay() {
-        confirmOrder({orderNumber: orderNumber}, token)
-        .then(() => {
-            message.success('pay success', 0.5, ()=>{
-                dispatch(getProductsInfoAction())
-                setVisible(false)
+        confirmOrder({ orderNumber: orderNumber }, token)
+            .then(() => {
+                message.success('pay success', 0.5, () => {
+                    dispatch(getProductsInfoAction())
+                    setVisible(false)
+                })
+            }).catch(() => {
+                message.error('pay failed')
             })
-        }).catch(() => {
-            message.error('pay failed')
-        })
     }
 
     const rowSelection = {
@@ -216,7 +216,7 @@ function Cart() {
                     >
                         <Button
                             type="primary"
-                            loading={loading} 
+                            loading={loading}
                             htmlType="submit"
                             style={{
                                 marginLeft: '300px',
@@ -230,21 +230,23 @@ function Cart() {
                             style={{
                                 marginLeft: '150px',
                             }}
-                        // onClick={() => { setResetVisible(!resetVisiable) }}
                         >
                             Pay by others
                         </Button>
                     </Form.Item>
                 </Form>
                 <Modal
-                    className='modal'
                     title='order confirm'
                     centered
                     visible={visible}
-                    onCancel={ ()=>{setVisible(false)} }
+                    onCancel={() => { setVisible(false) }}
                     footer={null}
                 >
-                    <Button onClick={()=>{confirmPay()}}> please pay </Button>
+                    <div style={{textAlign: 'center'}}>
+                        <h3 style={{color: 'red', fontSize: '24px'}}> {totalPrice} $ </h3>
+                         
+                        <Button onClick={() => { confirmPay() }}> pay now </Button>
+                    </div>
                 </Modal>
             </div>
         </CartWrapper>

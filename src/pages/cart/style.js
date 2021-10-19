@@ -11,9 +11,5 @@ export const CartWrapper = style.div`
         pre {
             font-size: 18px;
         }
-
-        .modal {
-            text-align: center;
-        }
     }
 ` 

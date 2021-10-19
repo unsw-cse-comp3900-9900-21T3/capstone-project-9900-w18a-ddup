@@ -5,7 +5,6 @@ import {
 
 const defaultState = {
     ProductsInfo: [],
-    // ProductInfo: {},
 }
 
 function reducer(state=defaultState, action) {
