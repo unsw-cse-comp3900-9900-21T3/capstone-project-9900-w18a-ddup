@@ -13,7 +13,6 @@ import dev.shawnking07.ecomm_system_backend.security.SecurityUtils;
 import dev.shawnking07.ecomm_system_backend.service.OrderService;
 import dev.shawnking07.ecomm_system_backend.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -99,13 +98,13 @@ public class OrderServiceImpl implements OrderService {
         String buyerUsername = (String) redisTemplate.opsForHash().get(ORDER_NUMBER + orderNumber, "buyer");
 
         if (orderDTO == null) throw new ResourceNotFoundException("orderNumber is wrong");
-        if (SecurityUtils.getCurrentUserLogin().stream().noneMatch(v -> StringUtils.equals(buyerUsername, v))) {
-            return DiscountVM.builder()
-                    .productIds(orderDTO.getProducts().stream()
-                            .map(OrderDTO.OrderProductsDTO::getProductId)
-                            .collect(Collectors.toList()))
-                    .build();
-        }
+//        if (SecurityUtils.getCurrentUserLogin().stream().noneMatch(v -> StringUtils.equals(buyerUsername, v))) {
+//            return DiscountVM.builder()
+//                    .productIds(orderDTO.getProducts().stream()
+//                            .map(OrderDTO.OrderProductsDTO::getProductId)
+//                            .collect(Collectors.toList()))
+//                    .build();
+//        }
         // update discount price
         BigDecimal totalPrice = new BigDecimal(0L);
         for (OrderDTO.OrderProductsDTO product : orderDTO.getProducts()) {
@@ -163,11 +162,16 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public MyOrderVM findMyOrders() {
         String s = SecurityUtils.getCurrentUserLogin().orElseThrow(RuntimeException::new);
-        var bought = orderRepository.findOrderByBuyer_Username(s).stream().map(this::order2orderVM).collect(Collectors.toList());
-        var paid = orderRepository.findOrderByPayer_Username(s).stream().map(this::order2orderVM).collect(Collectors.toList());
+        var bought = orderRepository.findByBuyer_UsernameOrderByIdDesc(s).stream().map(this::order2orderVM).collect(Collectors.toList());
+        var paid = orderRepository.findByPayer_UsernameOrderByIdDesc(s).stream().map(this::order2orderVM).collect(Collectors.toList());
+        List<OrderVM> admin = List.of();
+        if (SecurityUtils.hasCurrentUserThisAuthority("ROLE_ADMIN")) {
+            admin = orderRepository.findContainProductsCreatedBy(s).stream().map(this::order2orderVM).collect(Collectors.toList());
+        }
         return MyOrderVM.builder()
                 .bought(bought)
                 .paid(paid)
+                .admin(admin)
                 .build();
     }
 

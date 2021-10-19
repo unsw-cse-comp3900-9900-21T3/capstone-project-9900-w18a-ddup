@@ -14,4 +14,5 @@ import java.util.List;
 public class MyOrderVM {
     List<OrderVM> bought;
     List<OrderVM> paid;
+    List<OrderVM> admin;
 }

@@ -29,11 +29,9 @@ public class OrderController {
     }
 
     @Operation(summary = "Shared link operate discount for all items in order")
-    @SecurityRequirement(name = "bearerAuth")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @PostMapping("/discount")
-    public DiscountVM operateDiscount(@Valid @RequestBody OrderNumberDTO orderNumberDTO) {
-        return orderService.operateDiscount(orderNumberDTO.getOrderNumber());
+    @GetMapping("/discount")
+    public DiscountVM operateDiscount(@Valid @RequestParam String orderNumber) {
+        return orderService.operateDiscount(orderNumber);
     }
 
     @Operation(summary = "Query order", description = "query order which has not been confirmed")
@@ -54,7 +52,7 @@ public class OrderController {
 
     @Operation(summary = "My orders")
     @SecurityRequirement(name = "bearerAuth")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping
     public MyOrderVM findAllMyOrders() {
         return orderService.findMyOrders();
