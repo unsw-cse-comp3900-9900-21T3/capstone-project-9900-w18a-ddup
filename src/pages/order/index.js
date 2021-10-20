@@ -63,6 +63,13 @@ function Order() {
                     })}
                 </div>
             )
+        },
+        {
+            title: 'Discount',
+            dataIndex: 'discount',
+            key: 'discount',
+            width: 1,
+            render: discount => discount? 'YES' : 'NO'
         }
     ]
 

@@ -10,6 +10,7 @@ import Cart from "@/pages/cart";
 import Order from "@/pages/order";
 import Management from "@/pages/management";
 import AllOrder from "@/pages/all-order";
+import Share from "@/pages/share";
 
 const routes = [
     {
@@ -64,6 +65,10 @@ const routes = [
         path: '/allOrder',
         component: AllOrder
     },
+    {
+        path: '/share/:orderNumber',
+        component: Share
+    }
 ]
 
 export default routes

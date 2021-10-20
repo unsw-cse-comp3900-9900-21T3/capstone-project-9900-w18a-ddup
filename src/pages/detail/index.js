@@ -7,7 +7,7 @@ import { addProductAction } from "@/pages/cart/store/actionCreators";
 import { DetailWrapper } from "./style";
 
 
-function Detail({ match, history }) {
+function Detail({ match }) {
     const id = match.params.id
 
     const dispatch = useDispatch()

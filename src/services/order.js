@@ -31,3 +31,18 @@ export function getOrderInfo(token) {
         }
     })
 }
+
+export function getOrderNumberInfo(orderNumber) {
+    return request({
+        url: '/orders/' + orderNumber,
+    })
+}
+
+export function confrimSharedOrder(orderNumber) {
+    return request({
+        url: '/orders/discount',
+        params: {
+            orderNumber
+        }
+    })
+}

@@ -1,19 +1,26 @@
 import React, { memo, useMemo, useState } from "react";
 import { Table, Form, message, Input, Button, InputNumber, Modal } from "antd";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import copy from "copy-to-clipboard";
 
 import { CartWrapper } from "./style";
-import { imgBaseURL } from "@/constants";
+import { imgBaseURL, copyBase } from "@/constants";
 import { subProductAction } from "./store/actionCreators";
-import { createOrder, confirmOrder } from "@/services/order";
+import { createOrder, confirmOrder, getOrderNumberInfo } from "@/services/order";
 import { getProductsInfoAction } from "@/pages/management/store/actionCreators"
 
 function Cart() {
+    const [form] = Form.useForm();
     const [selectedRowKeys, setSelectedRowKeys] = useState([])
     const [numberObj, setNumberObj] = useState({})
     const [orderNumber, setOrderNumber] = useState('')
+    const [discountOrderNumber, setDiscountOrderNumber] = useState('')
     const [visible, setVisible] = useState(false)
+    const [discountVisible, setDiscountVisible] = useState(false)
+    const [checkVisible, setCheckVisible] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [discountLoading, setDiscountLoading] = useState(false)
+    const [discountOrderInfo, setDiscountOrderInfo] = useState({})
 
     const dispatch = useDispatch()
     const { productsArr, token, cartArr, userName } = useSelector(state => ({
@@ -42,6 +49,15 @@ function Cart() {
         return res
     }, [selectedRowKeys, numberObj, cartRes])
 
+    const totalDiscountPrice = useMemo(() => {
+        let res = 0
+        cartRes.forEach(item => {
+            if (selectedRowKeys.includes(item.id)) {
+                res += item.discountPrice * numberObj[item.id]
+            }
+        })
+        return res
+    }, [selectedRowKeys, numberObj, cartRes])
 
     function deleteClick(id) {
         setSelectedRowKeys(selectedRowKeys.filter(item => +item !== +id))
@@ -81,12 +97,69 @@ function Cart() {
         })
     }
 
+    function createDiscount() {
+        if (form.getFieldValue('phone number') && form.getFieldValue('address')) {
+            setDiscountLoading(true)
+            const products = []
+            for (let i of selectedRowKeys) {
+                products.push({
+                    productId: i,
+                    amount: numberObj[i]
+                })
+            }
+            const order = {
+                products,
+                payerUsername: userName,
+                shippingAddress: form.getFieldValue('address'),
+            }
+            createOrder(order, token).then(res => {
+                setDiscountOrderNumber(res.data.orderNumber)
+                message.success('create discount order success', 0.5, () => {
+                    setDiscountLoading(false)
+                    setDiscountVisible(true)
+                })
+            }).catch(() => {
+                message.error('create discount order failed', 0.5, () => {
+                    setDiscountLoading(false)
+                })
+            })
+        } else {
+            message.error('pelase finish form')
+        }
+    }
+
+    function checkDiscount() {
+        if (discountOrderNumber) {
+            getOrderNumberInfo(discountOrderNumber).then(res => {
+                setDiscountOrderInfo(res.data)
+                setCheckVisible(true)
+            }).catch(() => {
+                message.error('check dicount order failed')
+            })
+        } else {
+            message.error('please create dicount order first')
+        }
+    }
+
     function confirmPay() {
         confirmOrder({ orderNumber: orderNumber }, token)
             .then(() => {
                 message.success('pay success', 0.5, () => {
                     dispatch(getProductsInfoAction())
                     setVisible(false)
+                })
+            }).catch(() => {
+                message.error('pay failed')
+            })
+    }
+
+    function confirmDicountPay() {
+        confirmOrder({ orderNumber: discountOrderNumber }, token)
+            .then(() => {
+                message.success('pay success', 0.5, () => {
+                    setDiscountOrderNumber('')
+                    dispatch(getProductsInfoAction())
+                    setCheckVisible(false)
                 })
             }).catch(() => {
                 message.error('pay failed')
@@ -188,6 +261,7 @@ function Cart() {
                     labelCol={{ span: 8 }}
                     wrapperCol={{ span: 8 }}
                     onFinish={onFinish}
+                    form={form}
                 >
                     <Form.Item
                         label='phone number'
@@ -212,41 +286,84 @@ function Cart() {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        wrapperCol={{ span: 24 }}
+                        wrapperCol={{ span: 30 }}
                     >
                         <Button
                             type="primary"
                             loading={loading}
                             htmlType="submit"
                             style={{
-                                marginLeft: '300px',
+                                marginLeft: '150px',
                             }}>
                             Create order
                         </Button>
 
                         <Button
-                            disabled
                             type="primary"
+                            loading={discountLoading}
                             style={{
-                                marginLeft: '150px',
+                                marginLeft: '100px',
                             }}
+                            onClick={() => { createDiscount() }}
                         >
-                            Pay by others
+                            Create discount order
                         </Button>
+
+                        <Button
+                            type="link"
+                            // loading={discountLoading}
+                            style={{
+                                marginLeft: '100px',
+                            }}
+                            onClick={() => { checkDiscount() }}
+                        >
+                            Check discount order
+                        </Button>
+
                     </Form.Item>
                 </Form>
                 <Modal
-                    title='order confirm'
+                    title='create order'
                     centered
                     visible={visible}
                     onCancel={() => { setVisible(false) }}
                     footer={null}
                 >
-                    <div style={{textAlign: 'center'}}>
-                        <h3 style={{color: 'red', fontSize: '24px'}}> {totalPrice} $ </h3>
-                         
-                        <Button onClick={() => { confirmPay() }}> pay now </Button>
+                    <div style={{ textAlign: 'center' }}>
+                        <h3 style={{ color: 'red', fontSize: '24px' }}> {totalPrice} $ </h3>
+
+                        <Button onClick={() => { confirmPay() }}> Pay </Button>
                     </div>
+                </Modal>
+                <Modal
+                    title='create discount order'
+                    centered
+                    visible={discountVisible}
+                    onCancel={() => { setDiscountVisible(false) }}
+                    footer={null}
+                >
+                    <div style={{ textAlign: 'center' }}>
+                        <h3 style={{ color: 'red', fontSize: '24px' }}> {totalDiscountPrice} $ </h3>
+                        <pre> please copy this link to your friends </pre>
+                        <pre> {`${copyBase}/share/${discountOrderNumber}`} </pre>
+                        <Button
+                            onClick={() => {
+                                copy(`${copyBase}/share/${discountOrderNumber}`)
+                                message.success('copy success')
+                            }}>
+                            copy
+                        </Button>
+                    </div>
+                </Modal>
+                <Modal
+                    title='check discount order'
+                    centered
+                    visible={checkVisible}
+                    onCancel={() => { setCheckVisible(false) }}
+                    footer={null}
+                >
+                    <pre> price: {discountOrderInfo.totalPrice} discount: {discountOrderInfo.discount ? 'YES' : 'NO'} </pre>
+                    <Button onClick={() => { confirmDicountPay() }}> Pay </Button>
                 </Modal>
             </div>
         </CartWrapper>
