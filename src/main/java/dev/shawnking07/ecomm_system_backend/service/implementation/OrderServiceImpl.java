@@ -110,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
         for (OrderDTO.OrderProductsDTO product : orderDTO.getProducts()) {
             Product product1 = productRepository.findById(product.getProductId()).orElseThrow(ResourceNotFoundException::new);
             BigDecimal discountPrice = product1.getDiscountPrice();
-            totalPrice = totalPrice.add(discountPrice.multiply(new BigDecimal(product1.getAmount())));
+            totalPrice = totalPrice.add(discountPrice.multiply(new BigDecimal(product.getAmount())));
         }
         OrderDTO build = orderDTO.toBuilder().totalPrice(totalPrice).discount(Boolean.TRUE).build();
         redisTemplate.opsForHash().put(ORDER_NUMBER + orderNumber, "order", build);
@@ -214,6 +214,7 @@ public class OrderServiceImpl implements OrderService {
                         .product(productService.product2ProductVM(v.getProduct()))
                         .amount(v.getAmount())
                         .build()).collect(Collectors.toList()))
+                .discount(order.getDiscount())
                 .build();
     }
 }
