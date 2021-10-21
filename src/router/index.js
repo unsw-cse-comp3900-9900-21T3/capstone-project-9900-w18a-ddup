@@ -11,6 +11,7 @@ import Order from "@/pages/order";
 import Management from "@/pages/management";
 import AllOrder from "@/pages/all-order";
 import Share from "@/pages/share";
+import Pay from "@/pages/pay";
 
 const routes = [
     {
@@ -68,7 +69,11 @@ const routes = [
     {
         path: '/share/:orderNumber',
         component: Share
-    }
+    },
+    {
+        path: '/pay/:orderNumber',
+        component: Pay
+    },
 ]
 
 export default routes

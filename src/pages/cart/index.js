@@ -81,7 +81,7 @@ function Cart() {
         }
         const order = {
             products,
-            payerUsername: userName,
+            // payerUsername: userName,
             shippingAddress: values.address,
         }
         createOrder(order, token).then(res => {
@@ -332,7 +332,16 @@ function Cart() {
                     <div style={{ textAlign: 'center' }}>
                         <h3 style={{ color: 'red', fontSize: '24px' }}> {totalPrice} $ </h3>
 
-                        <Button onClick={() => { confirmPay() }}> Pay </Button>
+                        <Button onClick={() => { confirmPay() }} style={{ margin: '20px' }}> Pay </Button>
+                        <Button
+                            onClick={() => {
+                                copy(`${copyBase}/pay/${orderNumber}`)
+                                message.success('copy success, please share the link')
+                            }}
+                            style={{ margin: '20px' }}
+                        >
+                            Pay by others
+                        </Button>
                     </div>
                 </Modal>
                 <Modal
