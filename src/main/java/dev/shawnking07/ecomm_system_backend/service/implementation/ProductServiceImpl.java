@@ -6,12 +6,15 @@ import dev.shawnking07.ecomm_system_backend.dto.ProductDTO;
 import dev.shawnking07.ecomm_system_backend.dto.ProductPatchDTO;
 import dev.shawnking07.ecomm_system_backend.dto.ProductVM;
 import dev.shawnking07.ecomm_system_backend.entity.DbFile;
+import dev.shawnking07.ecomm_system_backend.entity.Order;
 import dev.shawnking07.ecomm_system_backend.entity.Product;
 import dev.shawnking07.ecomm_system_backend.entity.Tag;
+import dev.shawnking07.ecomm_system_backend.repository.OrderRepository;
 import dev.shawnking07.ecomm_system_backend.repository.ProductRepository;
 import dev.shawnking07.ecomm_system_backend.service.DbFileService;
 import dev.shawnking07.ecomm_system_backend.service.ProductService;
 import dev.shawnking07.ecomm_system_backend.service.TagService;
+import dev.shawnking07.ecomm_system_backend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -31,6 +34,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -39,22 +43,26 @@ public class ProductServiceImpl implements ProductService {
     private final static String ORDER_NUMBER = "order.number.";
 
     private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
     private final TagService tagService;
     private final ModelMapper modelMapper;
     private final DbFileService dbFileService;
+    private final UserService userService;
     private final StringRedisTemplate stringRedisTemplate;
     private final RedisTemplate<String, Object> redisTemplate;
 
     public ProductServiceImpl(ProductRepository productRepository,
-                              TagService tagService,
+                              OrderRepository orderRepository, TagService tagService,
                               ModelMapper modelMapper,
                               DbFileService dbFileService,
-                              StringRedisTemplate stringRedisTemplate,
+                              UserService userService, StringRedisTemplate stringRedisTemplate,
                               RedisTemplate<String, Object> redisTemplate) {
         this.productRepository = productRepository;
+        this.orderRepository = orderRepository;
         this.tagService = tagService;
         this.modelMapper = modelMapper;
         this.dbFileService = dbFileService;
+        this.userService = userService;
         this.stringRedisTemplate = stringRedisTemplate;
         this.redisTemplate = redisTemplate;
     }
@@ -234,7 +242,37 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public List<ProductVM> listProductsWithRecommendation() {
-        return productRepository.findAllProductsOrderBySell().stream().map(this::product2ProductVM).collect(Collectors.toList());
+        return productRepository.findAllProductsOrderBySell().parallelStream()
+                .limit(5)
+                .map(this::product2ProductVM)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public List<ProductVM> listProductsWithCustomizeRecommendation() {
+        List<Product> boughtProducts = orderRepository.findByBuyer_UsernameOrderByIdDesc(userService.getCurrentUser().orElseThrow().getUsername()).parallelStream()
+                .flatMap(v -> v.getProducts().stream())
+                .map(Order.OrderProducts::getProduct)
+                .distinct()
+                .collect(Collectors.toList());
+        var tags = boughtProducts.stream()
+                .flatMap(v -> v.getTags().stream())
+                .collect(Collectors.groupingBy(v -> v, Collectors.counting()))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+        var tagRecommend = productRepository.findDistinctByTagsIn(tags).parallelStream();
+        var normalRecommend = productRepository.findAllProductsOrderBySell().parallelStream();
+
+        return Stream.concat(tagRecommend, normalRecommend)
+                .filter(v -> !boughtProducts.contains(v))
+                .distinct()
+                .limit(5)
+                .map(this::product2ProductVM)
+                .collect(Collectors.toList());
     }
 
     @Override

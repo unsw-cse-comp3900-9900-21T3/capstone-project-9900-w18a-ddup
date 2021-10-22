@@ -72,4 +72,12 @@ public class ProductController {
         return productService.listProductsWithRecommendation();
     }
 
+    @Operation(summary = "Customized recommendation")
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/c-recommendation")
+    public List<ProductVM> customizedRecommendation() {
+        return productService.listProductsWithCustomizeRecommendation();
+    }
+
 }

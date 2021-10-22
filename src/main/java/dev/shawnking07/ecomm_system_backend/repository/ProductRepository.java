@@ -1,6 +1,7 @@
 package dev.shawnking07.ecomm_system_backend.repository;
 
 import dev.shawnking07.ecomm_system_backend.entity.Product;
+import dev.shawnking07.ecomm_system_backend.entity.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -39,7 +40,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "LEFT JOIN \"order\" o on op.order_id = o.id\n" +
             "WHERE p.amount > 0\n" +
             "GROUP BY p.id\n" +
-            "ORDER BY sum(op.amount) DESC NULLS LAST\n" +
-            "LIMIT 5", nativeQuery = true)
+            "ORDER BY sum(op.amount) DESC NULLS LAST", nativeQuery = true)
     List<Product> findAllProductsOrderBySell();
+
+    List<Product> findDistinctByTagsIn(List<Tag> tags);
 }

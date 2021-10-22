@@ -71,6 +71,13 @@ public interface ProductService {
     List<ProductVM> listProductsWithRecommendation();
 
     /**
+     * Recommend with previous purchase category
+     *
+     * @return Products
+     */
+    List<ProductVM> listProductsWithCustomizeRecommendation();
+
+    /**
      * Paged {@link ProductService#listProductsWithRecommendation()}
      *
      * @param pageable page head information
