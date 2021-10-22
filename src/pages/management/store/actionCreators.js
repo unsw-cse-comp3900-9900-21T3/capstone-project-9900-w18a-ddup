@@ -1,9 +1,10 @@
 import {
     GET_PRODUCTS_INFO,
     GET_PRODUCT_INFO,
+    GET_RECOMMENDATION,
 } from "./constants";
 
-import { getProductsInfo, getProductInfo } from "@/services/product"
+import { getProductsInfo, getProductInfo, getRecommendation } from "@/services/product"
 
 const setProductsInfoAction = arr => ({
     type: GET_PRODUCTS_INFO,
@@ -13,6 +14,11 @@ const setProductsInfoAction = arr => ({
 const setProductInfoAction = obj => ({
     type: GET_PRODUCT_INFO,
     productInfo: obj
+})
+
+const setRecommendation = res => ({
+    type: GET_RECOMMENDATION,
+    recommendation: res
 })
 
 export const getProductsInfoAction = () => (
@@ -30,3 +36,12 @@ export const getProductInfoAction = id => (
         } )
     }
 )
+
+export const getRecommendationAction = () => (
+    dispatch => {
+        getRecommendation().then(res => {
+            dispatch(setRecommendation(res.data))
+        })
+    }
+)
+

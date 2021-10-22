@@ -18,6 +18,12 @@ function Order() {
 
     const columns = [
         {
+            title: 'ID',
+            dataIndex: 'id',
+            key: 'id',
+            width: 1,
+        },
+        {
             title: 'PaidTime',
             dataIndex: 'paidTime',
             key: 'padiTime',

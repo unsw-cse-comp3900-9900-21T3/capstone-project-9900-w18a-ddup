@@ -43,3 +43,9 @@ export function editProductItem(id, formData, token) {
         }
     })
 }
+
+export function getRecommendation() {
+    return request({
+        url: '/products/recommendation',
+    })
+}

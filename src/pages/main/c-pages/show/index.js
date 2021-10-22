@@ -4,7 +4,7 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 import { ShowWrapper } from './style';
 import ProductCard from "@/components/product-card";
-import { getProductsInfoAction } from "@/pages/management/store/actionCreators";
+import { getProductsInfoAction, getRecommendationAction } from "@/pages/management/store/actionCreators";
 import {
     productTags,
     imgBaseURL,
@@ -16,18 +16,19 @@ import { displayPersentage } from "@/utils"
 function Show({ history }) {
 
     const dispatch = useDispatch()
-    const { productsArr, token } = useSelector(state => ({
+    const { productsArr, token, recommendation } = useSelector(state => ({
         productsArr: state.Product.ProductsInfo,
-        token: state.User.UserIDInfo.token
+        recommendation: state.Product.TopRecommendation,
+        token: state.User.UserIDInfo.token,
     }), shallowEqual)
 
     useEffect(() => {
         dispatch(getProductsInfoAction())
+        dispatch(getRecommendationAction())
     }, [dispatch])
 
     const discountPriceArr = productsArr.filter(item => item.discountPrice !== 0).slice(0, numberOfDiscountShow)
-    const recommendationArr = productsArr.sort((a, b) => b.price - a.price).slice(0, numberOfRecommendationShow)
-
+    
     //分类展示
     function productCardShow() {
         const obj = {}
@@ -65,7 +66,7 @@ function Show({ history }) {
                         autoplay
                         dotPosition='top'
                     >
-                        {recommendationArr.map((item, index) =>
+                        {recommendation.map((item, index) =>
                         (<div
                             onClick={() => { carouselClick(item.id) }}
                             className='click'
