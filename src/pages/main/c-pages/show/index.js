@@ -1,34 +1,48 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useMemo } from "react";
 import { Carousel, message } from 'antd';
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 import { ShowWrapper } from './style';
 import ProductCard from "@/components/product-card";
-import { getProductsInfoAction, getRecommendationAction } from "@/pages/management/store/actionCreators";
+import { 
+    getProductsInfoAction, 
+    getRecommendationAction,
+    getCRecommendationAction
+} from "@/pages/management/store/actionCreators";
 import {
     productTags,
     imgBaseURL,
     numberOfDiscountShow,
-    numberOfRecommendationShow
+    // numberOfRecommendationShow
 } from "@/constants"
 import { displayPersentage } from "@/utils"
 
 function Show({ history }) {
 
     const dispatch = useDispatch()
-    const { productsArr, token, recommendation } = useSelector(state => ({
+    const { productsArr, token, recommendation, cRecommendation } = useSelector(state => ({
         productsArr: state.Product.ProductsInfo,
-        recommendation: state.Product.TopRecommendation,
         token: state.User.UserIDInfo.token,
+        recommendation: state.Product.TopRecommendation,
+        cRecommendation: state.Product.CRecommendation,
     }), shallowEqual)
 
     useEffect(() => {
         dispatch(getProductsInfoAction())
-        dispatch(getRecommendationAction())
-    }, [dispatch])
+        if(token) {
+            dispatch(getCRecommendationAction(token))
+        } else {
+            dispatch(getRecommendationAction())
+        }
+    }, [dispatch, token])
+
+    //返回个性化推荐或大众推荐
+    const recommendationList = useMemo(() => {
+        return token? cRecommendation: recommendation
+    },[recommendation, cRecommendation, token])
 
     const discountPriceArr = productsArr.filter(item => item.discountPrice !== 0).slice(0, numberOfDiscountShow)
-    
+        
     //分类展示
     function productCardShow() {
         const obj = {}
@@ -66,7 +80,7 @@ function Show({ history }) {
                         autoplay
                         dotPosition='top'
                     >
-                        {recommendation.map((item, index) =>
+                        {recommendationList.map((item, index) =>
                         (<div
                             onClick={() => { carouselClick(item.id) }}
                             className='click'

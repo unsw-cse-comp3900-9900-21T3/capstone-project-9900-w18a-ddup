@@ -49,3 +49,12 @@ export function getRecommendation() {
         url: '/products/recommendation',
     })
 }
+
+export function getCRecommendation(token) {
+    return request({
+        url: '/products/c-recommendation',
+        headers: {
+            'authorization': 'Bearer '+ token
+        }  
+    })
+}
