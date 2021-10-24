@@ -10,3 +10,11 @@ This week we discussed some basic functions that need to be implemented in our e
 
 Week 3
 This week we wrote some drafts of user stories in Jira based on the features determined last week. Then for peoposal part, we assigned tasks to every group member, and everyone wrote a part of the proposal according to their own tasks. Finally, we integrated the proposal into a complete part And we start. In addition, we started the initial back-end and front-end development part for the first demo.
+
+
+Week 4
+Our main task this week is to implement the functionalities we described in Sprint 1 in Jira. Qi Lu, Yuxuan Huang and I are mainly responsible for the front-end part. What we have achieved in this stage will be demonstrated next week and it is the basic module of our project. 
+
+
+Week 5
+We successfully demonstrate what we have implemented for Sprint 1 to our tutor. Xuehua Ma and I are responsible for explaining the user stories and showing the interface and functionalities. Qi Lu, Yishun Jin and Yuxuan Huang play the role of technical advisor who answer tutors' questions. After demo, we held a retrospective meeting to conclude what we did well as well as what we did not well on the first phase. We recorded the conclusion in a report so that we could try our best to do better on our next demo.
