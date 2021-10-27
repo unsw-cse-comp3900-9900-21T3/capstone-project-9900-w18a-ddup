@@ -7,5 +7,13 @@ the main pages of our system and decide the rough front-end as well as back-end 
 for our group.
 
 week 3
-I created the shared document for our group to write the proposal. Besides, I keep doing my distributed proposal part of sprints. I plan to finish the background part in 2 days.
- 
+I created the shared document for our group to write the proposal. Besides, I keep doing my distributed proposal part of sprints. Finish the background part in 2 days and also user stories and sprint 1 and objective parts in 2 days. 
+
+week 4
+Finshed the distributed part in proposal and do the fibal integration for all content and submit it.
+
+week 5
+Do the backend tag code and prepare for the demo A. Hold the retrospective meeting A with other members and create a shared excel document for this report.
+
+week 6
+Still do the tag code and do integration for retrospective report A and submit it.
