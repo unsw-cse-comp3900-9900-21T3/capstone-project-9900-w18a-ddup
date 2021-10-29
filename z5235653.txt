@@ -13,3 +13,9 @@ I applied a CI system for auto test backend code and deploy API docs and system 
 
 Week 5
 I finished the CRUD api of products. Full text search for products. Fixed some bugs. And I switched backend api to a new server so that we can completed retroprospective demo A. Wrote some API docs at the same time.
+
+Week 6
+I finished the products api and fix some bugs for some api. Start implement order apis. Updated the dependent packages. 
+
+Week 7
+Fixed some bugs, and implement the recommendation api. Finished order apis.
