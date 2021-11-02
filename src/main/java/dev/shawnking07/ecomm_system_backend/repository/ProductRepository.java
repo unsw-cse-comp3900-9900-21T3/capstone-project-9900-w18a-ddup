@@ -44,4 +44,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllProductsOrderBySell();
 
     List<Product> findDistinctByTagsIn(List<Tag> tags);
+
+    List<Product> findAllByAmountGreaterThan(Long expectedAmount);
 }

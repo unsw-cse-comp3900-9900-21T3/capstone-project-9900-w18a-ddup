@@ -136,7 +136,8 @@ public class OrderServiceImpl implements OrderService {
                 log.info("Product [{}] is not enough", v.getProductId());
                 throw new RuntimeException("Product is not enough");
             }
-            var price = orderDTO.getDiscount() ? product.getDiscountPrice() : product.getPrice();
+            var price = orderDTO.getDiscount() && product.getDiscountPrice() != null ? product.getDiscountPrice() : product.getPrice();
+            if (price == null) throw new RuntimeException("Something wrong with this product!");
             totalPrice = totalPrice.add(price.multiply(new BigDecimal(v.getAmount())));
             OrderVM.OrderProductsVM build = OrderVM.OrderProductsVM.builder()
                     .amount(v.getAmount())
