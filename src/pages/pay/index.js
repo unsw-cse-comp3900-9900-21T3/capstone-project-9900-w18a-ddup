@@ -23,7 +23,7 @@ function Pay({ match }) {
         if (token) {
             confirmOrder({ orderNumber: orderNumber }, token)
                 .then(() => {
-                    message.success('pay success', 0.5)
+                    message.success('pay success', 1)
                 }).catch(() => {
                     message.error('pay failed')
                 })
@@ -40,7 +40,7 @@ function Pay({ match }) {
                     (
                         <>
                             <pre>
-                                {`Your friend ${orderInfo.buyer} wants you pay $${orderInfo.totalPrice} for him. Please login in and help him`}
+                                {`Your friend ${orderInfo.buyer} wants you pay $${orderInfo.totalPrice} for him. Please sign in and help him`}
                             </pre>
                             <Button
                                 type='primary'
