@@ -8,12 +8,14 @@
 
 ## How to run
 
-The API will be hosted on port 8080. Swagger API doc will be hosted on [http://<YOUR-HOST>:8080/swagger-ui.html]()
+The API will be hosted on port 8080. Swagger API doc will be hosted on [http://YOUR-HOST:8080/swagger-ui.html]()
 
 ### Requirements
 
 ```shell
-# install JDK and docker require root access
+# install JDK and docker
+# require root access
+chmod +x init.sh
 bash init.sh
 ```
 
@@ -29,9 +31,15 @@ popd
 
 ### Deployment
 
+The only requirement is `Docker`
+
+You could easily pull and run the docker image from GitHub
+packages `ghcr.io/shawnking07/capstone-project-9900-w18a-ddup:latest`
+
+or just run the command below
+
 ```shell
-./gradlew jibDockerBuild
-cd docker/submit
+cd docker/deploy
 docker-compose up
 ```
 
