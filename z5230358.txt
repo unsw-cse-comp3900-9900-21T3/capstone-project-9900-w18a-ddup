@@ -18,3 +18,11 @@ Our main task this week is to implement the functionalities we described in Spri
 
 Week 5
 We successfully demonstrate what we have implemented for Sprint 1 to our tutor. Xuehua Ma and I are responsible for explaining the user stories and showing the interface and functionalities. Qi Lu, Yishun Jin and Yuxuan Huang play the role of technical advisor who answer tutors' questions. After demo, we held a retrospective meeting to conclude what we did well as well as what we did not well on the first phase. We recorded the conclusion in a report so that we could try our best to do better on our next demo.
+
+
+Week 7
+We made some improvement according to the retrospective report A. Then our main task this week is to implement what we have described in sprint 2 on Jira. This part would focus on product details page, online payment and payment by others and this part will be demonstrate on Week 8. 
+
+
+Week 8
+The second demonstration has been hold on this week. I am mainly responsible for using the Easy-buy system to demonstrate the functionalities which are described in sprint 2 on Jira to our tutor. Then we hold the retrospective meeting on Thursday to conclude what we done well and not well, as well as how we improve the system according to retrospective A. Apart from those, we had another meeting to discuss about the final report and demo. 
