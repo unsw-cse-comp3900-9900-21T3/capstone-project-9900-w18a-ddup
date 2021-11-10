@@ -89,6 +89,11 @@ public class UserServiceImpl implements UserService {
         return Optional.of(userRepository.save(user));
     }
 
+    /**
+     * my info without orders
+     *
+     * @return user
+     */
     @Transactional
     @Override
     public Optional<UserVM> loadMyInformation() {

@@ -224,6 +224,12 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
+    /**
+     * full text search items
+     *
+     * @param search search value
+     * @return
+     */
     @Transactional
     @Override
     public List<ProductVM> searchProducts(String search) {
@@ -239,6 +245,11 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Top 5 sold items
+     *
+     * @return products
+     */
     @Transactional
     @Override
     public List<ProductVM> listProductsWithRecommendation() {
@@ -248,6 +259,11 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Top 5 sold items with same bought type except bought items
+     *
+     * @return products
+     */
     @Transactional
     @Override
     public List<ProductVM> listProductsWithCustomizeRecommendation() {

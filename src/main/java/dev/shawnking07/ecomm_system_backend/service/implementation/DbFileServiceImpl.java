@@ -34,6 +34,12 @@ public class DbFileServiceImpl implements DbFileService {
         this.properties = properties;
     }
 
+    /**
+     * download id will be store in redis, expire time config in yaml
+     *
+     * @param id file id
+     * @return
+     */
     @Override
     public String generateDownloadLink(Long id) {
         String link = redisTemplate.opsForValue().get(BASE_ID_KEY + id);
@@ -49,6 +55,13 @@ public class DbFileServiceImpl implements DbFileService {
         return generateDownloadLink(dbFile.getId());
     }
 
+    /**
+     * download file interface
+     * file will be marked as attachment
+     *
+     * @param link download link
+     * @return
+     */
     @Transactional
     @Override
     public ResponseEntity<InputStreamResource> downloadFile(String link) {

@@ -8,6 +8,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @EnableScheduling
 public class AppConfiguration {
+    /**
+     * ModelMapper instance
+     * Only copy exactly same properties, and skip null
+     */
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();

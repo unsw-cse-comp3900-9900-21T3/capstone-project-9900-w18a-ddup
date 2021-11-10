@@ -98,13 +98,6 @@ public class OrderServiceImpl implements OrderService {
         String buyerUsername = (String) redisTemplate.opsForHash().get(ORDER_NUMBER + orderNumber, "buyer");
 
         if (orderDTO == null) throw new ResourceNotFoundException("orderNumber is wrong");
-//        if (SecurityUtils.getCurrentUserLogin().stream().noneMatch(v -> StringUtils.equals(buyerUsername, v))) {
-//            return DiscountVM.builder()
-//                    .productIds(orderDTO.getProducts().stream()
-//                            .map(OrderDTO.OrderProductsDTO::getProductId)
-//                            .collect(Collectors.toList()))
-//                    .build();
-//        }
         // update discount price
         BigDecimal totalPrice = new BigDecimal(0L);
         for (OrderDTO.OrderProductsDTO product : orderDTO.getProducts()) {
@@ -159,6 +152,11 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
+    /**
+     * combine my bought, paid and orders with managed items if I am admin
+     *
+     * @return orders
+     */
     @Transactional
     @Override
     public MyOrderVM findMyOrders() {
@@ -176,6 +174,11 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
+    /**
+     * confirm orders and save it to db
+     *
+     * @param orderNumber generated orderNumber not id
+     */
     @Transactional
     @Override
     public void confirmOrder(String orderNumber) {
