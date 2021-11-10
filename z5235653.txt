@@ -19,3 +19,6 @@ I finished the products api and fix some bugs for some api. Start implement orde
 
 Week 7
 Fixed some bugs, and implement the recommendation api. Finished order apis.
+
+Week 8
+Finished all apis, and fixed some bugs. Wrote some comments and initial scripts.
