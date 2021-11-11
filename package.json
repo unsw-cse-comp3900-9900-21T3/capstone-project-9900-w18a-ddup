@@ -11,7 +11,6 @@
     "antd": "^4.16.13",
     "axios": "^0.22.0",
     "copy-to-clipboard": "^3.3.1",
-    "immer": "^9.0.6",
     "normalize.css": "^8.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -22,7 +21,6 @@
     "redux": "^4.1.1",
     "redux-thunk": "^2.3.0",
     "styled-components": "^5.3.1",
-    "use-immer": "^0.6.0",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

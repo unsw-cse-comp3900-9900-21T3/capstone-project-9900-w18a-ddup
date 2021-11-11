@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, Suspense } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { renderRoutes } from "react-router-config";
 import { Provider } from "react-redux";
@@ -13,7 +13,9 @@ function App() {
     <Provider store={store}>
       <BrowserRouter>
         <AppHeader />
-        {renderRoutes(routes)}
+        <Suspense fallback={<div> page loading... </div>}>
+          {renderRoutes(routes)}
+        </Suspense>
         <AppFooter />
       </BrowserRouter>
     </Provider>

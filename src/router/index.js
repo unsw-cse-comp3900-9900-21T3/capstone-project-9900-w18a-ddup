@@ -1,17 +1,29 @@
-import React from "react";
+import React, { lazy } from "react";
 import { Redirect } from "react-router-dom";
 
-import Main from "@/pages/main";
-import Show from "@/pages/main/c-pages/show";
-import Search from "@/pages/main/c-pages/search";
-import Detail from "@/pages/detail";
-import Profile from "@/pages/profile";
-import Cart from "@/pages/cart";
-import Order from "@/pages/order";
-import Management from "@/pages/management";
-import AllOrder from "@/pages/all-order";
-import Share from "@/pages/share";
-import Pay from "@/pages/pay";
+const Main = lazy(() => import("@/pages/main"))
+const Show = lazy(() => import("@/pages/main/c-pages/show"))
+const Search = lazy(() => import("@/pages/main/c-pages/search"))
+const Detail = lazy(() => import("@/pages/detail"))
+const Profile = lazy(() => import("@/pages/profile"))
+const Cart = lazy(() => import("@/pages/cart"))
+const Order = lazy(() => import("@/pages/order"))
+const Management = lazy(() => import("@/pages/management"))
+const AllOrder = lazy(() => import("@/pages/all-order"))
+const Share = lazy(() => import("@/pages/share"))
+const Pay = lazy(() => import("@/pages/pay")) 
+
+// import Main from "@/pages/main";
+// import Show from "@/pages/main/c-pages/show";
+// import Search from "@/pages/main/c-pages/search";
+// import Detail from "@/pages/detail";
+// import Profile from "@/pages/profile";
+// import Cart from "@/pages/cart";
+// import Order from "@/pages/order";
+// import Management from "@/pages/management";
+// import AllOrder from "@/pages/all-order";
+// import Share from "@/pages/share";
+// import Pay from "@/pages/pay";
 
 const routes = [
     {
