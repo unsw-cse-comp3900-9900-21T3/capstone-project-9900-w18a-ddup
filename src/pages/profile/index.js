@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { UserOutlined } from "@ant-design/icons";
-import { Form, Input, Button, message } from "antd"
+import { Form, Input, Button, message, Spin } from "antd"
 
 import { getUserInfoAction } from "@/components/signIn/store/actionCreators"
 import { ProfileWrapper } from "./style";
@@ -23,7 +23,7 @@ function Profile() {
         dispatch(getUserInfoAction(token))
     }, [dispatch, token, address, password])
     useEffect(() => {
-        form.current.setFieldsValue({
+        form.current?.setFieldsValue({
             address: address,
         })
     }, [address])
@@ -39,91 +39,99 @@ function Profile() {
         )
     }
 
+    const userProfile = (<div className='form'>
+        <Form
+            name='signUp'
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 24 }}
+            onFinish={onFinish}
+            ref={form}
+        >
+            <Form.Item
+                label="Username"
+                name="username"
+                initialValue={username}
+                rules={[
+                    {
+                        required: true,
+                        message: 'Please input your username!',
+                    },
+                ]}
+            >
+                <Input disabled />
+            </Form.Item>
+
+            <Form.Item
+                label="E-mail"
+                name="address"
+                initialValue={address}
+                rules={[
+                    {
+                        type: 'email',
+                        message: 'The input is not valid E-mail!',
+                    },
+                    {
+                        required: true,
+                        message: 'Please input your E-mail!',
+                    },
+                ]}
+            >
+                <Input />
+            </Form.Item>
+
+            <Form.Item
+                label="Phone"
+                name="phone"
+            // rules={[
+            //     {
+            //         required: true,
+            //         message: 'Please input your phone number!',
+            //     },
+            // ]}
+            >
+                <Input />
+            </Form.Item>
+
+            <Form.Item
+                label="Password"
+                name="password"
+                initialValue={password}
+                rules={[
+                    {
+                        required: true,
+                        message: 'Please input your password!',
+                    },
+                ]}
+            >
+                <Input.Password />
+            </Form.Item>
+
+            <Form.Item
+                wrapperCol={{
+                    offset: 8,
+                    span: 16,
+                }}
+            >
+                <Button type="primary" htmlType="submit" loading={loading}>
+                    Edit
+                </Button>
+            </Form.Item>
+        </Form>
+    </div>)
+
     return (
         <ProfileWrapper>
             <div className='profile-header'>
                 <div className='avatar'>
                     <UserOutlined style={{ fontSize: '300px' }} />
                 </div>
-                <div className='form'>
-                    <Form
-                        name='signUp'
-                        labelCol={{ span: 8 }}
-                        wrapperCol={{ span: 24 }}
-                        onFinish={onFinish}
-                        ref={form}
-                    >
-                        <Form.Item
-                            label="Username"
-                            name="username"
-                            initialValue={username}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your username!',
-                                },
-                            ]}
-                        >
-                            <Input disabled />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="E-mail"
-                            name="address"
-                            initialValue={address}
-                            rules={[
-                                {
-                                    type: 'email',
-                                    message: 'The input is not valid E-mail!',
-                                },
-                                {
-                                    required: true,
-                                    message: 'Please input your E-mail!',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Phone"
-                            name="phone"
-                        // rules={[
-                        //     {
-                        //         required: true,
-                        //         message: 'Please input your phone number!',
-                        //     },
-                        // ]}
-                        >
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Password"
-                            name="password"
-                            initialValue={password}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your password!',
-                                },
-                            ]}
-                        >
-                            <Input.Password />
-                        </Form.Item>
-
-                        <Form.Item
-                            wrapperCol={{
-                                offset: 8,
-                                span: 16,
-                            }}
-                        >
-                            <Button type="primary" htmlType="submit" loading={loading}>
-                                Edit
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </div>
+                {
+                    address ? userProfile :
+                        <div >
+                            <Spin size='large' style={{ display: 'block' }} />
+                            <Button tyle={{ display: 'block' }} onClick={() => { dispatch(getUserInfoAction(token)) }}> request data </Button>
+                        </div>
+                }
                 <div />
             </div>
         </ProfileWrapper>

@@ -10,6 +10,7 @@ import {
     MainHeaderWrapper,
     MainFooterWrapper
 } from "./style";
+import logo from "@/assets/img/logo.png"
 
 function Main(props) {
     const history = props.history
@@ -24,12 +25,14 @@ function Main(props) {
     function inputPressEnter() {
         history.push('/main/search', {keyWord: searchValue})
     }
-
+ 
     return (
         <MainWrapper>
             <MainHeaderWrapper>
                 <div className='main-header'>
-                    <div className='main-logo'> LOGO </div> 
+                    <div className='main-logo'>  
+                        <img src={logo} alt='logo...'/>
+                    </div> 
                     <Input 
                         placeholder='  please input' 
                         size='large'

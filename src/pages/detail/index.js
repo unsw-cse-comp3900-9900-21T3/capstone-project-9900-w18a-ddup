@@ -55,7 +55,7 @@ function Detail({ match }) {
                     </Card>
                     <div className='option'>
                         <Button size='large' onClick={() => { addIntoCart(productInfo.id) }}> add </Button>
-                        <Button disabled size='large'> join group </Button>
+                        {/* <Button disabled size='large'> </Button> */}
                     </div>
                 </div>
             </div>

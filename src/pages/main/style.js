@@ -24,9 +24,12 @@ export const MainHeaderWrapper = style.div`
     }
 
     .main-logo {
-        width: 150px;
+        width: 110px;
         height: 80px;
-        background-color: red;
+
+        img {
+            width: 100%;
+        }
     }
 `
 export const MainFooterWrapper = style.div`

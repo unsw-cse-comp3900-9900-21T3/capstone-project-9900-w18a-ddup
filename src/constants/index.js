@@ -8,7 +8,7 @@ export const customerAvatarMenu = [
         key: 'cart'
     },
     {
-        title: 'My order',
+        title: 'My orders',
         key: 'order'
     },
     {

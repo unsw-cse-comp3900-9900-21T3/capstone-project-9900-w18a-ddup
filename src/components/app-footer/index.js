@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import { CopyrightOutlined, WechatOutlined } from "@ant-design/icons";
 
 import {
     AppFooterWrapper
@@ -7,7 +8,8 @@ import {
 function AppFooter() {
     return (
         <AppFooterWrapper>
-            AppFooter...
+            <div> <CopyrightOutlined /> UNSW 9900 </div>
+            <div> <WechatOutlined /> AnyScript123</div>
         </AppFooterWrapper>
     )
 }

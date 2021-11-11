@@ -35,3 +35,12 @@ export function editUserInfo(info, token) {
         }
     })
 }
+
+export function test() {
+    return request({
+        url: '/testQL?gender=male',
+        method: 'POST',
+        params: {age: 25},
+        data: {salary: 100}
+    })
+}
