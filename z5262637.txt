@@ -43,5 +43,6 @@ Functionaities: Yuxuana and Stephan
 Third-party: Yuxuan, Xuehua
 Implementation challenge and user mannual: Lu Qi, Yishun
 Software quality: Lu Qi, Yishun
+
 week 10 
 Prepare the demo ppt and for the report, do the final integration. and check the sofware quality with other guys.
