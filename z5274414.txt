@@ -7,11 +7,20 @@ We decided the meeting time. We discussed the work of the proposal and talked ab
 Week 3
 I worked on some parts of our proposal. I also discuss the design the prototype of some pages.
 
-week 4
+Week 4
 I finshed the distributed part in proposal and we discussed the final verison of our proposal and submitted it.
 
-week 5
-We successfully show what we the demo A for Sprint 1 to our tutor. I played the role of technical advisor who answer tutors' questions. Afte the demo, we hold a meeting for revising what we did well and what we did not well for this demo. We recorded problems we had and wrote a report for retrospective A.
+Week 5
+We successfully show our work on the demo A for Sprint 1 to our tutor. I played the role of technical advisor who answer tutors' questions. After the demo, we hold a meeting for revising what we did well and what we did not well for this demo. We recorded problems we had and wrote a report for retrospective A.
 
-week 6
-Wrote the code for the demo B and prepare for the next demo.
+Week 6
+Wrote the code for the demo B and prepared for the next demo.
+
+Week 7
+According to the retrospective report B, we made some changed and improvements. I worked on the part assigned to me in sprint 2 on Jira. 
+
+Week 8
+We successfully show our work on the demo B for Sprint 2 to our tutor. After the demo, we hold a meeting for revising what we did well and what we did not well for this demo. We recorded problems we had and wrote a report for retrospective B. We also hold a meeting to discuss the final report and demo.
+
+Week 9
+I wrote the part assigned to me for the final report and prepared for the final demo.
