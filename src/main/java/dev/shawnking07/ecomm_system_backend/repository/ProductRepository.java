@@ -15,11 +15,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "       last_modified_date,\n" +
             "       amount,\n" +
             "       discount_price,\n" +
-            "       filename,\n" +
-            "       filetype,\n" +
-            "       name,\n" +
-            "       picture,\n" +
             "       price,\n" +
+            "       name,\n" +
             "       description\n" +
             "FROM (\n" +
             "         SELECT DISTINCT ts_rank_cd(to_tsvector('english',\n" +
