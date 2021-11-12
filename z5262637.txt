@@ -2,18 +2,46 @@ week 1
 As a scrum master, I created the jira account and project for our team, I also help discuss the topic and distribute the user story draft tasks to members.
 
 week 2
-We decide the meeting time. As a scrum master, I hold the meeting with other guys to decide our final novel functions and lead them to decide the final user stories, we discuss the
-the main pages of our system and decide the rough front-end as well as back-end architecture. Then I help to distribute the task in terms of proposal report and decide the deadline
-for our group.
+We decide the meeting time. As a scrum master, I hold the meeting with other guys to decide our final novel functions and lead them to decide the final user stories, we discuss the main pages of our system and decide the rough front-end as well as back-end architecture. Then I help to distribute the task in terms of proposal report and decide the deadline for our group.
+The distributed proposal part is like:
+Backgound and sprint and objetives - Xuehua
+User story and interface  - Luqi, Stephan, Yuxuan
+System arche - Yishun
 
 week 3
 I created the shared document for our group to write the proposal. Besides, I keep doing my distributed proposal part of sprints. Finish the background part in 2 days and also user stories and sprint 1 and objective parts in 2 days. 
 
 week 4
-Finshed the distributed part in proposal and do the fibal integration for all content and submit it.
+Finished the distributed part in proposal and do the final integration for all content and submit it.
 
 week 5
-Do the backend tag code and prepare for the demo A. Hold the retrospective meeting A with other members and create a shared excel document for this report.
+Do the backend tag code and prepare for the demo A. Do the demo A. Hold the retrospective meeting A with other members and create a shared excel document for this report.
 
 week 6
 Still do the tag code and do integration for retrospective report A and submit it.
+
+week 7
+Prepare for the demo B and lead the meeting with other guys to practice for demo B.
+
+week 8
+Hold the retrospective meeting B with other members and create a shared excel document for this report, and then do the integration for this report and submit it.
+
+week 9
+Determine final report structure and hold the meeting with other guys and distribute the report and demo task to them.
+for the demo, the task distributed is like:
+1.background pre, and intorduce recomm main page product without sign-in+User regist     -Xuehua
+2.sign-in+User profile manage  -Xuehua
+3.sign-in Recommendation Main page product show and product search   - Qilu
+4.Specific product display and add to cart -Qilu
+5.Online pay and pay by others -Yunxuan
+6.Discount share link - Yishun
+7.Manage order history - Yishun
+8.admin sign-in and product info manage and order info manage -Stefan
+the report is like：
+Overview: Xuehua (Stephan do the front-end arche)
+Functionaities: Yuxuana and Stephan
+Third-party: Yuxuan, Xuehua
+Implementation challenge and user mannual: Lu Qi, Yishun
+Software quality: Lu Qi, Yishun
+week 10 
+Prepare the demo ppt and for the report, do the final integration. and check the sofware quality with other guys.
