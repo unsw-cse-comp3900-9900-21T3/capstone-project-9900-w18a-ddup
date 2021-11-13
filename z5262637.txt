@@ -15,16 +15,16 @@ week 4
 Finished the distributed part in proposal and do the final integration for all content and submit it.
 
 week 5
-Do the backend tag code and prepare for the demo A. Do the demo A. Hold the retrospective meeting A with other members and create a shared excel document for this report.
+Do the backend tag code and prepare for the demo A like do adjustment in jira account. Do the demo A. Hold the retrospective meeting A with other members and create a shared excel document for this report.
 
 week 6
 Still do the tag code and do integration for retrospective report A and submit it.
 
 week 7
-Prepare for the demo B and lead the meeting with other guys to practice for demo B.
+Prepare for the demo B do adjustment in jira account and lead the meeting with other guys to practice for demo B.
 
 week 8
-Hold the retrospective meeting B with other members and create a shared excel document for this report, and then do the integration for this report and submit it.
+Do the demo B and hold the retrospective meeting B with other members and create a shared excel document for this report, and then do the integration for this report and submit it.
 
 week 9
 Determine final report structure and hold the meeting with other guys and distribute the report and demo task to them.
@@ -45,4 +45,4 @@ Implementation challenge and user mannual: Lu Qi, Yishun
 Software quality: Lu Qi, Yishun
 
 week 10 
-Prepare the demo ppt and for the report, do the final integration. and check the sofware quality with other guys.
+Prepare the demo ppt and for the report, do the final integration. and hold the meeting with other guys to practice for final pre and check the sofware quality with other guys.
