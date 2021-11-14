@@ -6,3 +6,21 @@ I drew the prototype of the webpage, including the homepage, user login, and use
 
 week3
 Complete the proposal together
+
+week5
+develope fontend
+
+week6
+develope fontend
+
+week7
+develope fontend
+
+week8
+develope fontend
+
+week9
+develope fontend
+
+week10
+write report
