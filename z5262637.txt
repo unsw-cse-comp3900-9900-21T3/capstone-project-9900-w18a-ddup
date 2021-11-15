@@ -27,7 +27,7 @@ week 8
 Do the demo B and hold the retrospective meeting B with other members and create a shared excel document for this report, and then do the integration for this report and submit it.
 
 week 9
-Determine final report structure and hold the meeting with other guys and distribute the report and demo task to them.
+Determine final report structure and hold the meeting with other guys and istribute the report and demo task to them.
 for the demo, the task distributed is like:
 1.background pre, and intorduce recomm main page product without sign-in+User regist     -Xuehua
 2.sign-in+User profile manage  -Xuehua
@@ -43,6 +43,7 @@ Functionaities: Yuxuana and Stephan
 Third-party: Yuxuan, Xuehua
 Implementation challenge and user mannual: Lu Qi, Yishun
 Software quality: Lu Qi, Yishun
+Readme file: all mem
 
 week 10 
-Prepare the demo ppt and for the report, do the final integration. and hold the meeting with other guys to practice for final pre and check the sofware quality with other guys.
+Prepare the demo ppt for the report, do the final report integration and improve the user manual part and readme file. and hold the meeting with other guys to practice for final pre and check the sofware quality with other guys.
