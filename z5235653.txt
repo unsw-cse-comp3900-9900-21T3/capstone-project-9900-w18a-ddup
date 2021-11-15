@@ -22,3 +22,9 @@ Fixed some bugs, and implement the recommendation api. Finished order apis.
 
 Week 8
 Finished all apis, and fixed some bugs. Wrote some comments and initial scripts.
+
+Week 9
+Wrote report and user manual. Complete the backend part for submission. Test the system
+
+Week 10
+Prepare for demo. Complete report and user manual. Test the system
