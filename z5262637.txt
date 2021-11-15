@@ -18,7 +18,7 @@ week 5
 Do the backend tag code and prepare for the demo A like do adjustment in jira account. Do the demo A. Hold the retrospective meeting A with other members and create a shared excel document for this report.
 
 week 6
-Still do the tag code and do integration for retrospective report A and submit it.
+Still do the tag code and push it to github through Yishun account and do integration for retrospective report A and submit it.
 
 week 7
 Prepare for the demo B do adjustment in jira account and lead the meeting with other guys to practice for demo B.
