@@ -34,7 +34,8 @@ export const adminAvatarMenu = [
 
 export const adminArr = ['admin@test.com']
 
-export const imgBaseURL = 'https://ecomm.shawnking07.dev'
+export const imgBaseURL = process.env.NODE_ENV === 'development'
+    ? 'http://localhost:8080' : 'https://ecomm.shawnking07.dev'
 
 export const itemsPerPageForAdmin = 8
 
@@ -46,4 +47,4 @@ export const numberOfDiscountShow = 6
 
 export const numberOfRecommendationShow = 6
 
-export const copyBase = process.env.NODE_ENV === 'development' ? 'localhost:3000' : '118.31.49.77'
+export const copyBase = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '118.31.49.77'

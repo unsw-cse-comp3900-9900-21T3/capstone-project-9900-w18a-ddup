@@ -1,6 +1,7 @@
 import originAxios from 'axios';
 
-export const baseURL =  'https://ecomm.shawnking07.dev'
+export const baseURL = process.env.NODE_ENV === 'development' ? 
+    'http://localhost:8080' :'https://ecomm.shawnking07.dev'
 
 export default function request(option) {
     return new Promise((resolve, reject) => {
