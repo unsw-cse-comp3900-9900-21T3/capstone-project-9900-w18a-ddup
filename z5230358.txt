@@ -26,3 +26,11 @@ We made some improvement according to the retrospective report A. Then our main 
 
 Week 8
 The second demonstration has been hold on this week. I am mainly responsible for using the Easy-buy system to demonstrate the functionalities which are described in sprint 2 on Jira to our tutor. Then we hold the retrospective meeting on Thursday to conclude what we done well and not well, as well as how we improve the system according to retrospective A. Apart from those, we had another meeting to discuss about the final report and demo. 
+
+
+Week 9
+The first task this week is to complete the Sprint 3 and Sprint 4 parts of Jira. Mainly realised the function of sharing products to friends to help get discounts, which is another innovative feature of ours. Then we made some improvements to the system based on the results of the last retrospective meeting. Then I wrote the report part I was responsible for, and prepared for the final demo.
+
+Week 10
+This is the last week of this semester. The main task of this week is to integrate our report, rehearse the demo repeatedly, modify the minor problems in the system, and prepare for the final demo on Wednesday.
+
